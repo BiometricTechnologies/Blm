@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:wsap="http://schemas.xmlsoap.org/ws/2004/08/addressing/policy" xmlns:wsa10="http://www.w3.org/2005/08/addressing" xmlns:tns="IdentaZone.Indss" xmlns:msc="http://schemas.microsoft.com/ws/2005/12/wsdl/contract" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:wsx="http://schemas.xmlsoap.org/ws/2004/09/mex" xmlns:wsp="http://www.w3.org/ns/ws-policy" xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="IdentaZone.Indss" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <xsd:schema targetNamespace="IdentaZone.Indss/Imports">
+      <xsd:import schemaLocation="http://localhost:8001/MatchingService?xsd=xsd0" namespace="IdentaZone.Indss" />
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="EchoRequest">
+    <wsdl:part name="echoRequest" element="tns:echoRequest" />
+  </wsdl:message>
+  <wsdl:message name="EchoResponse">
+    <wsdl:part name="Response" element="tns:Response" />
+  </wsdl:message>
+  <wsdl:message name="MatchRequest1">
+    <wsdl:part name="matchRequest" element="tns:matchRequest" />
+  </wsdl:message>
+  <wsdl:message name="MatchResponse">
+    <wsdl:part name="Response" element="tns:Response" />
+  </wsdl:message>
+  <wsdl:message name="GetBspProvidersListRequest">
+    <wsdl:part name="Empty" element="tns:Empty" />
+  </wsdl:message>
+  <wsdl:message name="GetBspProvidersListResponse">
+    <wsdl:part name="Response" element="tns:Response" />
+  </wsdl:message>
+  <wsdl:message name="AddBspTemplateRequest">
+    <wsdl:part name="AddTemplateRequest" element="tns:AddTemplateRequest" />
+  </wsdl:message>
+  <wsdl:message name="AddBspTemplateResponse">
+    <wsdl:part name="Response" element="tns:Response" />
+  </wsdl:message>
+  <wsdl:message name="EnableUserRequest1">
+    <wsdl:part name="enableUserRequest" element="tns:enableUserRequest" />
+  </wsdl:message>
+  <wsdl:message name="EnableUserResponse">
+    <wsdl:part name="Response" element="tns:Response" />
+  </wsdl:message>
+  <wsdl:message name="ConnectDBRequest1">
+    <wsdl:part name="connectDBRequest" element="tns:connectDBRequest" />
+  </wsdl:message>
+  <wsdl:message name="ConnectDBResponse">
+    <wsdl:part name="Response" element="tns:Response" />
+  </wsdl:message>
+  <wsdl:portType name="IMatchingService">
+    <wsdl:operation name="Echo">
+      <wsdl:input wsam:Action="IdentaZone.Indss/IMatchingService/Echo" name="EchoRequest" message="tns:EchoRequest" />
+      <wsdl:output wsam:Action="IdentaZone.Indss/IMatchingService/EchoResponse" name="EchoResponse" message="tns:EchoResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="Match">
+      <wsdl:input wsam:Action="IdentaZone.Indss/IMatchingService/Match" name="MatchRequest1" message="tns:MatchRequest1" />
+      <wsdl:output wsam:Action="IdentaZone.Indss/IMatchingService/MatchResponse" name="MatchResponse" message="tns:MatchResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="GetBspProvidersList">
+      <wsdl:input wsam:Action="IdentaZone.Indss/IMatchingService/GetBspProvidersList" name="GetBspProvidersListRequest" message="tns:GetBspProvidersListRequest" />
+      <wsdl:output wsam:Action="IdentaZone.Indss/IMatchingService/GetBspProvidersListResponse" name="GetBspProvidersListResponse" message="tns:GetBspProvidersListResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="AddBspTemplate">
+      <wsdl:input wsam:Action="IdentaZone.Indss/IMatchingService/AddBspTemplate" name="AddBspTemplateRequest" message="tns:AddBspTemplateRequest" />
+      <wsdl:output wsam:Action="IdentaZone.Indss/IMatchingService/AddBspTemplateResponse" name="AddBspTemplateResponse" message="tns:AddBspTemplateResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="EnableUser">
+      <wsdl:input wsam:Action="IdentaZone.Indss/IMatchingService/EnableUser" name="EnableUserRequest1" message="tns:EnableUserRequest1" />
+      <wsdl:output wsam:Action="IdentaZone.Indss/IMatchingService/EnableUserResponse" name="EnableUserResponse" message="tns:EnableUserResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="ConnectDB">
+      <wsdl:input wsam:Action="IdentaZone.Indss/IMatchingService/ConnectDB" name="ConnectDBRequest1" message="tns:ConnectDBRequest1" />
+      <wsdl:output wsam:Action="IdentaZone.Indss/IMatchingService/ConnectDBResponse" name="ConnectDBResponse" message="tns:ConnectDBResponse" />
+    </wsdl:operation>
+  </wsdl:portType>
+</wsdl:definitions>

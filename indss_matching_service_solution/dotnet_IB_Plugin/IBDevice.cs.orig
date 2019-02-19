@@ -1,0 +1,650 @@
+﻿using BioNetACSLib;
+using IdentaMaster;
+using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace IB
+{
+    public class IntegratedBiometricsPlugin : IDevicePlugin
+    {
+        public List<IDeviceControl> deviceControls { get; set; }
+        public string Description
+        {
+            get { return "Plugin is developed for IdentaBiometrics scanners"; }
+        }
+
+        /// <summary>
+        /// Releases unmanaged and - optionally - managed resources.
+        /// </summary>
+        public void Dispose()
+        {
+
+        }
+
+        /// <summary>
+        /// Initializes the specified main container.
+        /// </summary>
+        /// <param name="MainContainer">The main container.</param>
+        /// <exception cref="System.NotImplementedException"></exception>
+        public void Initialize(object MainContainer)
+        {
+            deviceControls = new List<IDeviceControl>();
+        }
+
+        public string Name
+        {
+            get { return "Integrated Biometrics"; }
+        }
+
+        public Version Version
+        {
+            get { return new Version(0, 0, 0, 1); }
+        }
+    }
+
+    public class IBDeviceControl : IDeviceControl
+    {
+        public List<IDevice> activeDevices { get; set; }
+
+        public override string ToString()
+        {
+            return "Integrated Biometrics";
+        }
+
+        public void Initialize()
+        {
+            activeDevices = new List<IDevice>();
+            BioNetACSDLL._AlgoInit();
+        }
+
+        public void Dispose()
+        {
+            foreach (var reader in activeDevices)
+            {
+                reader.Dispose();
+            }
+        }
+
+        public void EnumerateDevices()
+        {
+            String deviceList = BioNetACSDLL._GetUSNList();
+
+            foreach (var deviceName in deviceList.Split(','))
+            {
+                if (activeDevices.OfType<IBDevice>().Any(dev => dev.name == deviceName)) continue;
+                if (BioNetACSDLL._OpenNetAccessDeviceByUSN(deviceName) != 1)
+                {
+                    break;
+                }
+                else
+                {
+                    BioNetACSDLL._CloseNetAccessDevice();
+                }
+
+                IBDevice device = new IBDevice();
+                device.name = deviceName;
+                activeDevices.Add(device);
+            }
+
+            List<IBDevice> toDeleteList = new List<IBDevice>();
+            foreach (var device in activeDevices.OfType<IBDevice>())
+            {
+                bool toDelete = true;
+                foreach (var deviceName in deviceList.Split(','))
+                {
+                    if (deviceName == device.name)
+                    {
+                        toDelete = false;
+                    }
+                }
+                if (toDelete)
+                {
+                    toDeleteList.Add(device);
+                    device.Dispose();
+                }
+            }
+            foreach (var device in toDeleteList)
+            {
+                activeDevices.Remove(device);
+            }
+        }
+    }
+
+    public class IBTemplate : FingerTemplate
+    {
+        override public String type
+        {
+            get { return "IB01"; }
+        }
+        public byte[] enrollment { get; set; }
+        public IBTemplate(byte[] enrollment)
+        {
+            this.enrollment = enrollment;
+        }
+        override public String Serialize()
+        {
+            return Convert.ToBase64String(enrollment);
+        }
+    }
+
+    public class IBDevice : IDevice
+    {
+
+        private const int NEEDED_QUALITY = 75;
+
+        private enum COM { NONE, SINGLE_FINGER, TEST, ENROLL, BREAK };
+        private enum STATE { IDLE, TEST, GETFINGER_1, GETIMAGE_1, GETEMPTY_1, GETEMPTY_2, GETFINGER_2, GETIMAGE_2, OFFLINE, GETSINGLE, LIFTSINGLE };
+
+        List<FingerTemplate> resultBios = new List<FingerTemplate>();
+        private const int MAX_FEATURE = 6;
+        private const int ENROLL_IMAGES = 3;
+
+        public event EventHandler<Biometrics> BiometricsCaptured = delegate { };
+        public event EventHandler<Message> SendMessage = delegate { };
+        public event EventHandler<List<FingerTemplate>> BiometricsEnrolled = delegate { };
+        public string name { get; set; }
+        public string id { get; set; }
+
+        private BlockingCollection<COM> queue = new BlockingCollection<COM>();
+        private CancellationTokenSource cancelToken = new CancellationTokenSource();
+
+        public IBDevice()
+        {
+            Task.Factory.StartNew(() =>
+                {
+                    deviceThread();
+                });
+        }
+
+        public void Dispose()
+        {
+            cancelToken.Cancel(true);
+        }
+
+        private byte[] RotateImageCCW(byte[] image, int width, int height)
+        {
+            byte[] rotatedImage = new byte[height * width];
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    // rotatedImage[(x) * height + (height - y - 1)] = image[y * width + x]; // CW
+                    rotatedImage[y + (width - 1 - x) * height] = image[y * width + x]; // CCW
+                }
+            }
+            return rotatedImage;
+        }
+
+        private byte[] RotateImage(byte[] image, int width, int height)
+        {
+            byte[] rotatedImage = new byte[height * width];
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    rotatedImage[(x) * height + (height - y - 1)] = image[y * width + x]; // CW
+                    // rotatedImage[y + (width - 1 - x) * height] = image[y * width + x]; // CCW
+                }
+            }
+            return rotatedImage;
+        }
+
+        public bool CheckImage(FingerImage image, List<Finger> list)
+        {
+
+            Dictionary<byte[], int> fingerList = new Dictionary<byte[], int>();
+
+            foreach (var finger in list)
+            {
+                fingerList.Add(Convert.FromBase64String(finger.bytes), finger.fingerNum);
+            }
+
+            byte[] rotatedImage = RotateImage(image.rawData, image.width, image.height);
+
+            byte[] pFp = new byte[BioNetACSDLL._GetFeatSize()];
+            int extResult = BioNetACSDLL._ExtractFt(rotatedImage, pFp);
+
+            foreach (var finger in fingerList)
+            {
+                int result = BioNetACSDLL._CompareFt9052vs9052(finger.Key, pFp);
+                if (result > 0)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        public int FindFingerIndex(FingerTemplate template, List<Finger> list)
+        {
+
+            Dictionary<byte[], int> fingerList = new Dictionary<byte[], int>();
+
+            foreach (var finger in list)
+            {
+                fingerList.Add(Convert.FromBase64String(finger.bytes), finger.fingerNum);
+            }
+
+            foreach (var finger in fingerList)
+            {
+                int result = BioNetACSDLL._CompareFt9052vs9052(finger.Key, (template as IBTemplate).enrollment);
+                if (result > 0)
+                {
+                    return finger.Value;
+                }
+            }
+
+            return -1;
+        }
+
+
+        /// <summary>
+        /// Returns a string that represents the current object.
+        /// </summary>
+        /// <returns>
+        /// A string that represents the current object.
+        /// </returns>
+        public override String ToString()
+        {
+            return "Integrated Biometrics";
+        }
+
+        private void OnBiometricsCaptured(Biometrics bio)
+        {
+            Ambassador.AddMessage(new MessageBiometricsCaptured(bio));
+        }
+
+        private void OnSendTextMessage(String msg)
+        {
+            Ambassador.AddMessage(new MessageText(msg));
+        }
+
+        private void OnSendProgressMessage(int progress)
+        {
+            Ambassador.AddMessage(MessageProgress.Set(progress));
+        }
+
+        private void OnBiometricsEnrolled(List<FingerTemplate> templates)
+        {
+            Ambassador.AddMessage(new MessageBiometricsEnrolled(templates));
+        }
+
+        private void OnSingleCaptured(IBTemplate tmpl)
+        {
+            Ambassador.AddMessage(new MessageSingleCaptured(tmpl));
+        }
+
+        public void StartCapture()
+        {
+            queue.Add(COM.TEST);
+        }
+
+        public void StopCapture()
+        {
+            queue.Add(COM.BREAK);
+        }
+
+        public void StartEnrollment()
+        {
+            queue.Add(COM.ENROLL);
+        }
+
+        public void StopEnrollment()
+        {
+            queue.Add(COM.BREAK);
+        }
+
+        public void StartSingleFinger()
+        {
+            queue.Add(COM.SINGLE_FINGER);
+        }
+
+        public void StopSingleFinger()
+        {
+            queue.Add(COM.BREAK);
+        }
+
+
+        private void deviceThread()
+        {
+            STATE state = STATE.IDLE;
+            COM com = COM.NONE;
+            byte[] image = null;
+            byte[][] resultFeat = null;
+            byte[][] imageStack = null;
+            byte[][] FingerFeat = null;
+            int firstEnrollCount = 0, secondEnrollCount = 0;
+            int status = 0;
+
+            BioNetACSDLL._AlgoInit();
+            Thread.Sleep(1000);
+            if (BioNetACSDLL._OpenNetAccessDeviceByUSN(name) != 1)
+            {
+                throw new Exception("Can't open device");
+            }
+
+
+            int uniqueUsbKey = BioNetACSDLL._GetUSBKey();
+            int imageSize = BioNetACSDLL._GetImgSize();
+            int imageWidth = BioNetACSDLL._GetImgWidth();
+            int imageHeight = BioNetACSDLL._GetImgSize() / BioNetACSDLL._GetImgWidth();
+
+            FingerFeat = new byte[MAX_FEATURE][];
+            for (int i = 0; i < MAX_FEATURE; i++)
+            {
+                FingerFeat[i] = new byte[BioNetACSDLL._GetFeatSize()];
+            }
+
+            try
+            {
+                while (true)
+                {
+                    cancelToken.Token.ThrowIfCancellationRequested();
+
+                    if (state == STATE.IDLE)
+                    {
+                        com = queue.Take(cancelToken.Token);
+                    }
+                    else
+                    {
+                        // non blocking take
+                        if (queue.Count > 0)
+                        {
+                            com = queue.Take();
+                        }
+                    }
+
+                    switch (com)
+                    {
+                        case COM.TEST:
+                            state = STATE.TEST;
+                            break;
+                        case COM.BREAK:
+                            state = STATE.IDLE;
+                            break;
+                        case COM.ENROLL:
+                            state = STATE.GETFINGER_1;
+                            resultFeat = new byte[2][];
+                            for (int i = 0; i < 2; i++)
+                            {
+                                resultFeat[i] = new byte[BioNetACSDLL._GetFeatSize()];
+                            }
+
+                            imageStack = new byte[ENROLL_IMAGES * 2][];
+                            for (int i = 0; i < ENROLL_IMAGES * 2; i++)
+                            {
+                                imageStack[i] = new byte[imageSize];
+                            }
+
+                            firstEnrollCount = 0;
+                            secondEnrollCount = 0;
+                            resultBios.Clear();
+                            break;
+                        case COM.SINGLE_FINGER:
+                            state = STATE.GETSINGLE;
+                            break;
+                    }
+                    com = COM.NONE;
+
+                    /*
+                    if (BioNetACSDLL._GetDeviceStatus() != 1)
+                    {
+                        throw (new Exception("Scanner disconnected"));
+                    }
+                    if (BioNetACSDLL._OpenNetAccessDeviceByUSN(name) != 1)
+                    {
+                        throw new Exception("Can't open device");
+                    }
+                    */
+
+                    if (uniqueUsbKey != BioNetACSDLL._GetUSBKey())
+                    {
+                        state = STATE.OFFLINE;
+                    }
+
+                    switch (state)
+                    {
+                        case STATE.TEST:
+                            image = new byte[imageSize];
+                            status = BioNetACSDLL._GetNetAccessImage(image);
+                            switch (status)
+                            {
+                                // not connected
+                                case -1:
+                                    state = STATE.OFFLINE;
+                                    OnSendTextMessage("Scanner is not connected");
+                                    break;
+                                case 0:
+                                    OnSendTextMessage("Please, touch the scanner");
+                                    break;
+                                default:
+                                    OnSendTextMessage("");
+                                    break;
+                            }
+                            byte[] imageRot = RotateImageCCW(image, imageWidth, imageHeight);
+                            OnBiometricsCaptured(new FingerImage(imageRot, imageHeight, imageWidth));
+                            break;
+                        case STATE.GETSINGLE:
+                            image = new byte[imageSize];
+                            status = BioNetACSDLL._GetNetAccessImage(image);
+
+                            switch (status)
+                            {
+                                // not connected
+                                case -1:
+                                    OnSendTextMessage("Scanner is not connected");
+                                    break;
+                                case 0:
+                                    OnSendTextMessage("Please, touch the scanner");
+                                    break;
+                                case 1:
+                                    int qual = BioNetACSDLL._GetIBQualityScore(image);
+                                    if (qual > NEEDED_QUALITY)
+                                    {
+                                        goto default;
+                                    }
+                                    OnSendTextMessage("Image quality " + qual + " not enough, keep finger on scanner");
+                                    image = RotateImageCCW(image, imageWidth, imageHeight);
+                                    OnBiometricsCaptured(new FingerImage(image, imageHeight, imageWidth));
+                                    break;
+                                default:
+                                    byte[] pFp = new byte[BioNetACSDLL._GetFeatSize()];
+                                    BioNetACSDLL._ExtractFt(image, pFp);
+                                    IBTemplate template = new IBTemplate(pFp);
+                                    OnSingleCaptured(template);
+                                    image = RotateImageCCW(image, imageWidth, imageHeight);
+                                    OnBiometricsCaptured(new FingerImage(image, imageHeight, imageWidth));
+                                    state = STATE.LIFTSINGLE;
+                                    break;
+                            }
+                            break;
+                        case STATE.LIFTSINGLE:
+                            image = new byte[imageSize];
+                            status = BioNetACSDLL._GetNetAccessImage(image);
+                            BioNetACSDLL._ControlTOUCH(false);
+                            switch (status)
+                            {
+                                // not connected
+                                case -1:
+                                    OnSendTextMessage("Scanner is not connected");
+                                    break;
+                                case 0:
+                                    state = STATE.GETSINGLE;
+                                    break;
+                                default:
+                                    OnSendTextMessage("Please, remove finger from the scanner");
+                                    break;
+                            }
+                            break;
+                        case STATE.GETFINGER_1:
+                            image = new byte[imageSize];
+                            state = STATE.GETIMAGE_1;
+                            break;
+                        case STATE.GETIMAGE_1:
+                            status = BioNetACSDLL._GetNetAccessImage(image);
+                            switch (status)
+                            {
+                                // not connected
+                                case -1:
+                                    OnSendTextMessage("Scanner is not connected");
+                                    break;
+                                case 0:
+                                    OnSendTextMessage("Please, touch the scanner");
+                                    break;
+                                case 1:
+                                    int qual = BioNetACSDLL._GetIBQualityScore(image);
+                                    if (qual > NEEDED_QUALITY)
+                                    {
+                                        goto default;
+                                    }
+                                    OnSendTextMessage("Image quality " + qual + " not enough, keep finger on scanner");
+                                    image = RotateImageCCW(image, imageWidth, imageHeight);
+                                    OnBiometricsCaptured(new FingerImage(image, imageHeight, imageWidth));
+                                    break;
+                                default:
+                                    Array.Copy(image, imageStack[firstEnrollCount], imageSize);
+
+                                    image = RotateImageCCW(image, imageWidth, imageHeight);
+                                    OnBiometricsCaptured(new FingerImage(image, imageHeight, imageWidth));
+
+                                    firstEnrollCount++;
+                                    OnSendProgressMessage((firstEnrollCount) * 22);
+
+                                    state = STATE.GETEMPTY_1;
+
+                                    break;
+                            }
+                            break;
+                        case STATE.GETEMPTY_1:
+                            image = new byte[imageSize];
+                            status = BioNetACSDLL._GetNetAccessImage(image);
+                            switch (status)
+                            {
+                                // not connected
+                                case -1:
+                                    OnSendTextMessage("Scanner is not connected");
+                                    break;
+                                case 0:
+                                    if (firstEnrollCount < 3)
+                                    {
+                                        state = STATE.GETFINGER_1;
+                                    }
+                                    else
+                                    {
+                                        int singeEnrolResult = BioNetACSDLL._Enroll_SingleTemplate(
+                                            (byte[])imageStack[0], (byte[])imageStack[1], (byte[])imageStack[2],
+                                            (byte[])FingerFeat[0], (byte[])FingerFeat[1], (byte[])FingerFeat[2],
+                                            resultFeat[0]);
+                                        if (singeEnrolResult < 1)
+                                        {
+                                            state = STATE.GETEMPTY_2;
+                                        }
+                                        else
+                                        {
+                                            state = STATE.IDLE;
+                                            resultBios.Add(new IBTemplate(resultFeat[0]));
+                                            OnSendTextMessage("Successfully registered");
+                                            OnBiometricsEnrolled(resultBios);
+                                        }
+                                    }
+                                    break;
+                                default:
+                                    OnSendTextMessage("Please, remove finger from the scanner");
+                                    break;
+                            }
+                            break;
+                        case STATE.GETFINGER_2:
+                            image = new byte[imageSize];
+                            state = STATE.GETIMAGE_2;
+                            break;
+                        case STATE.GETIMAGE_2:
+                            status = BioNetACSDLL._GetNetAccessImage(image);
+                            switch (status)
+                            {
+                                // not connected
+                                case -1:
+                                    OnSendTextMessage("Scanner is not connected");
+                                    break;
+                                case 0:
+                                    OnSendTextMessage("Please, touch the scanner");
+                                    break;
+                                case 1:
+                                    int qual = BioNetACSDLL._GetIBQualityScore(image);
+                                    if (qual > NEEDED_QUALITY)
+                                    {
+                                        goto default;
+                                    }
+                                    OnSendTextMessage("Image quality " + qual + " not enough, keep finger on scanner");
+                                    image = RotateImageCCW(image, imageWidth, imageHeight);
+                                    OnBiometricsCaptured(new FingerImage(image, imageHeight, imageWidth));
+                                    break;
+                                default:
+                                    Array.Copy(image, imageStack[secondEnrollCount], imageSize);
+
+                                    image = RotateImageCCW(image, imageWidth, imageHeight);
+                                    OnBiometricsCaptured(new FingerImage(image, imageHeight, imageWidth));
+                                    secondEnrollCount++;
+                                    OnSendProgressMessage(66 + (secondEnrollCount) * 11);
+                                    state = STATE.GETEMPTY_2;
+                                    break;
+                            }
+                            break;
+                        case STATE.GETEMPTY_2:
+                            image = new byte[imageSize];
+                            status = BioNetACSDLL._GetNetAccessImage(image);
+                            switch (status)
+                            {
+                                // not connected
+                                case -1:
+                                    OnSendTextMessage("Scanner is not connected");
+                                    break;
+                                case 0:
+                                    if (secondEnrollCount < 3)
+                                    {
+                                        state = STATE.GETFINGER_2;
+                                    }
+                                    else
+                                    {
+                                        int multiEnrollResult = BioNetACSDLL._Enroll_MultiTemplate(
+                                            (byte[])FingerFeat[0], (byte[])FingerFeat[1], (byte[])FingerFeat[2],
+                                            (byte[])imageStack[3], (byte[])imageStack[4], (byte[])imageStack[5],
+                                            resultFeat[0], resultFeat[1]);
+                                        if (multiEnrollResult > 0)
+                                        {
+                                            state = STATE.IDLE;
+                                            resultBios.Add(new IBTemplate(resultFeat[0]));
+                                            resultBios.Add(new IBTemplate(resultFeat[1]));
+                                            OnSendTextMessage("Successfully registered");
+                                            OnBiometricsEnrolled(resultBios);
+                                        }
+                                        else
+                                        {
+                                            state = STATE.IDLE;
+                                            OnSendTextMessage("Can't create template, please repeat");
+                                            OnBiometricsEnrolled(null);
+                                        }
+                                    }
+                                    break;
+                                default:
+                                    OnSendTextMessage("Please, remove finger from the scanner");
+                                    break;
+                            }
+                            break;
+                        case STATE.OFFLINE:
+                            break;
+                    }
+                }
+            }
+            catch
+            {
+                BioNetACSDLL._CloseNetAccessDevice();
+            }
+        }
+    }
+}

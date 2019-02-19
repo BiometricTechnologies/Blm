@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="IdentaZone.Indss" elementFormDefault="qualified" targetNamespace="IdentaZone.Indss" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="echoRequest" type="xs:string" />
+  <xs:element name="Response" type="xs:string" />
+  <xs:element name="matchRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="1" name="Pin" type="xs:string" />
+        <xs:element minOccurs="1" maxOccurs="1" name="Bsp_Code" type="xs:int" />
+        <xs:element minOccurs="0" maxOccurs="1" name="LoginName" type="xs:string" />
+        <xs:element minOccurs="0" maxOccurs="1" name="Template" type="xs:base64Binary" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Empty">
+    <xs:complexType />
+  </xs:element>
+  <xs:element name="AddTemplateRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="1" name="Pin" type="xs:string" />
+        <xs:element minOccurs="0" maxOccurs="1" name="LoginName" type="xs:string" />
+        <xs:element minOccurs="1" maxOccurs="1" name="SysRole" type="xs:int" />
+        <xs:element minOccurs="1" maxOccurs="1" name="BspType" type="xs:int" />
+        <xs:element minOccurs="1" maxOccurs="1" name="BspMode" type="xs:int" />
+        <xs:element minOccurs="0" maxOccurs="1" name="BspTemplate" type="xs:base64Binary" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="enableUserRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="1" name="Pin" type="xs:string" />
+        <xs:element minOccurs="1" maxOccurs="1" name="AccFlag" type="xs:boolean" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="connectDBRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="1" name="Server" type="xs:string" />
+        <xs:element minOccurs="0" maxOccurs="1" name="Port" type="xs:string" />
+        <xs:element minOccurs="0" maxOccurs="1" name="Database" type="xs:string" />
+        <xs:element minOccurs="0" maxOccurs="1" name="Uid" type="xs:string" />
+        <xs:element minOccurs="0" maxOccurs="1" name="Password" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

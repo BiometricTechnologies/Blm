@@ -1,0 +1,1259 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>DPUruNet</name>
+    </assembly>
+    <members>
+        <member name="T:DPUruNet.Comparison">
+            <summary>
+            Contains static methods to compare FMDs.
+            </summary>
+        </member>
+        <member name="F:DPUruNet.Comparison.DPFJ_PROBABILITY_ONE">
+            <summary>
+            Dissimilarity score equivalent to no match.
+            </summary>
+        </member>
+        <member name="M:DPUruNet.Comparison.Compare(DPUruNet.Fmd,System.Int32,DPUruNet.Fmd,System.Int32)">
+            <summary>
+            Compares two fingerprints.
+            
+            <para>Given two single views from two Fmds, this function returns a <b>dissimilarity score</b> indicating the quality of the match.  </para>
+            <para>The dissimilarity scores returned values are between:  </para>
+            <para>0 (match), </para>
+            <para>Max Integer Value (no match).  </para>
+            <para>Values close to 0 indicate very close matches, values closer to maxint indicate very poor matches.  </para>
+            <para>For a discussion of  how to evaluate dissimilarity scores, as well as the statistical validity of the dissimilarity score and error rates, consult the Developer Guide.  </para>        /// 
+            <para>The Compare function returns DP_SUCCESS if it is able to compare the fingerprints successfully (i.e., the Fmds are valid and correctly formed).  However that does not mean that the fingerprints matched. To check whether they matched, you must look at the dissimilarity score.</para>
+            </summary>
+            <param name="fmd1">First FMD</param>
+            <param name="index1">Index of the view in the first FMD</param>
+            <param name="fmd2">Second FMD</param>
+            <param name="index2">Index of the view in the second FMD</param>
+            <returns>
+            DP_SUCCESS: Comparison finished;
+            DP_INVALID_PARAMETER: One or more parameters passed are invalid;
+            DP_FAILURE: Unknown error.
+            </returns>
+        </member>
+        <member name="M:DPUruNet.Comparison.Identify(DPUruNet.Fmd,System.Int32,System.Collections.Generic.IEnumerable{DPUruNet.Fmd},System.Int32,System.Int32)">
+            <summary>
+            <para>Compares a single fingerprint to an array of fingerprints.  This function takes as inputs:</para>
+            	<para>- a single view in an Fmd</para>
+            	<para>- an array of Fmds (each Fmd can contain up to 16 views) to compare, all of the same format</para>
+            	<para>- the desired number of matches to return </para>
+            	<para>- the threshold for False Positive Identification Rate that is permitted</para>
+            <para>This function compares a single view against an array of Fmds.  Each time view has a score lower than the threshold, that view is marked as a possible candidate.  </para>
+            <para>Then when all possible candidates are identified (i.e., they meet the threshold), they are ranked by their score.  Finally, the function returns as many candidates as requested, based on the candidates with the lowest dissimilarity score.</para>
+            <para>For a discussion of setting the threshold as well as the statistical validity of the dissimilarity score and error rates, consult the Developer Guide.  </para>
+            </summary>
+            <param name="fmd">First FMD</param>
+            <param name="index">Index of the view in the first FMD</param>
+            <param name="fmds">Array of FMDs.  Null items are not allowed between FMDs</param>
+            <param name="thresholdScore">Target threshold on degree of dissimilarity, between 0 and int.MaxValue</param>
+            <param name="maxResult">How many candidates to return</param>
+            <returns>
+            DPFJ_SUCESS: Identification finished
+            DP_INVALID_PARAMETER: One or more parameters passed are invalid;
+            DP_FAILURE: Unknown error
+            </returns>
+        </member>
+        <member name="T:DPUruNet.CompareResult">
+            <summary>
+            Compare results containing result code and dissimilarity score.
+            </summary>
+        </member>
+        <member name="T:DPUruNet.Result">
+            <summary>
+            Base class containing the result code of a .Net Wrapper operation.
+            </summary>
+        </member>
+        <member name="M:DPUruNet.Result.#ctor(DPUruNet.Constants.ResultCode)">
+            <summary>
+            Constructor.
+            </summary>
+            <param name="resultCode">Result code</param>
+        </member>
+        <member name="P:DPUruNet.Result.ResultCode">
+            <summary>
+            Result code.
+            </summary>
+        </member>
+        <member name="M:DPUruNet.CompareResult.#ctor(DPUruNet.Constants.ResultCode,System.Int32)">
+            <summary>
+             Constructor for CompareResult.
+            </summary>
+            <param name="result">Resule code</param>
+            <param name="score">Dissimilarity score</param>
+        </member>
+        <member name="P:DPUruNet.CompareResult.Score">
+            <summary>
+            Dissimilarity score.
+            </summary>
+        </member>
+        <member name="T:DPUruNet.IdentifyResult">
+            <summary>
+            Identify results containing result code and an 2-dimensional array of finger/view pairs where matches are located within the gallery identified.  Write a custom algorithm to search through the gallery using this result set.
+            </summary>
+        </member>
+        <member name="M:DPUruNet.IdentifyResult.#ctor(DPUruNet.Constants.ResultCode,System.Int32[][])">
+            <summary>
+            Constructor for IdentifyResult.
+            </summary>
+            <param name="result">Result code</param>
+            <param name="indexes">Array of finger/view index pairs</param>
+        </member>
+        <member name="P:DPUruNet.IdentifyResult.Indexes">
+            <summary>
+            Contains matches of an identity operation as an array of finger/view index pairs.
+            </summary>
+        </member>
+        <member name="T:DPUruNet.Constants">
+            <summary>
+            Contains constants and enumerations.
+            </summary>
+        </member>
+        <member name="F:DPUruNet.Constants.MAXIMUM_FMD_SIZE">
+            <summary>
+            Maximum FMD size.
+            </summary>
+        </member>
+        <member name="F:DPUruNet.Constants.WRAPPER_VERSION">
+            <summary>
+            .NET Wrapper version.
+            </summary>
+        </member>
+        <member name="T:DPUruNet.Constants.CapturePriority">
+            <summary>
+            Capture priority.
+            </summary>
+        </member>
+        <member name="T:DPUruNet.Constants.CaptureQuality">
+            <summary>
+            Result of the capture operation.
+            </summary>
+        </member>
+        <!-- Badly formed XML comment ignored for member "F:DPUruNet.Constants.CaptureQuality.DP_QUALITY_TIMED_OUT" -->
+        <!-- Badly formed XML comment ignored for member "F:DPUruNet.Constants.CaptureQuality.DP_QUALITY_CANCELED" -->
+        <!-- Badly formed XML comment ignored for member "F:DPUruNet.Constants.CaptureQuality.DP_QUALITY_NO_FINGER" -->
+        <!-- Badly formed XML comment ignored for member "F:DPUruNet.Constants.CaptureQuality.DP_QUALITY_FAKE_FINGER" -->
+        <!-- Badly formed XML comment ignored for member "F:DPUruNet.Constants.CaptureQuality.DP_QUALITY_FINGER_TOO_LEFT" -->
+        <!-- Badly formed XML comment ignored for member "F:DPUruNet.Constants.CaptureQuality.DP_QUALITY_FINGER_TOO_RIGHT" -->
+        <!-- Badly formed XML comment ignored for member "F:DPUruNet.Constants.CaptureQuality.DP_QUALITY_FINGER_TOO_HIGH" -->
+        <!-- Badly formed XML comment ignored for member "F:DPUruNet.Constants.CaptureQuality.DP_QUALITY_FINGER_TOO_LOW" -->
+        <!-- Badly formed XML comment ignored for member "F:DPUruNet.Constants.CaptureQuality.DP_QUALITY_FINGER_OFF_CENTER" -->
+        <!-- Badly formed XML comment ignored for member "F:DPUruNet.Constants.CaptureQuality.DP_QUALITY_SCAN_SKEWED" -->
+        <!-- Badly formed XML comment ignored for member "F:DPUruNet.Constants.CaptureQuality.DP_QUALITY_SCAN_TOO_SHORT" -->
+        <!-- Badly formed XML comment ignored for member "F:DPUruNet.Constants.CaptureQuality.DP_QUALITY_SCAN_TOO_LONG" -->
+        <!-- Badly formed XML comment ignored for member "F:DPUruNet.Constants.CaptureQuality.DP_QUALITY_SCAN_TOO_SLOW" -->
+        <!-- Badly formed XML comment ignored for member "F:DPUruNet.Constants.CaptureQuality.DP_QUALITY_SCAN_TOO_FAST" -->
+        <!-- Badly formed XML comment ignored for member "F:DPUruNet.Constants.CaptureQuality.DP_QUALITY_SCAN_WRONG_DIRECTION" -->
+        <!-- Badly formed XML comment ignored for member "F:DPUruNet.Constants.CaptureQuality.DP_QUALITY_READER_DIRTY" -->
+        <!-- Badly formed XML comment ignored for member "F:DPUruNet.Constants.CaptureQuality.DP_QUALITY_READER_FAILED" -->
+        <member name="T:DPUruNet.Constants.CaptureProcessing">
+            <summary>
+            Image processing.
+            </summary>
+        </member>
+        <!-- Badly formed XML comment ignored for member "F:DPUruNet.Constants.CaptureProcessing.DP_IMG_PROC_PIV" -->
+        <!-- Badly formed XML comment ignored for member "F:DPUruNet.Constants.CaptureProcessing.DP_IMG_PROC_ENHANCED" -->
+        <!-- Badly formed XML comment ignored for member "F:DPUruNet.Constants.CaptureProcessing.DP_IMG_PROC_UNPROCESSED" -->
+        <member name="T:DPUruNet.Constants.ImpressionType">
+            <summary>
+            Impression type.
+            </summary>
+        </member>
+        <member name="T:DPUruNet.Constants.ReaderStatuses">
+            <summary>
+            Enumeration describing reader status.
+            </summary>
+        </member>
+        <!-- Badly formed XML comment ignored for member "F:DPUruNet.Constants.ReaderStatuses.DP_STATUS_BUSY" -->
+        <!-- Badly formed XML comment ignored for member "F:DPUruNet.Constants.ReaderStatuses.DP_STATUS_NEED_CALIBRATION" -->
+        <!-- Badly formed XML comment ignored for member "F:DPUruNet.Constants.ReaderStatuses.DP_STATUS_FAILURE" -->
+        <member name="T:DPUruNet.Constants.ReaderModality">
+            <summary>
+            Enumeration describing reader modality (i.e., swipe, area).
+            </summary>
+        </member>
+        <member name="T:DPUruNet.Constants.ReaderTechnology">
+            <summary>
+            Enumeration describing reader technology (i.e., optical, capacitive, ...).
+            </summary>
+        </member>
+        <member name="T:DPUruNet.Constants.Formats">
+            <summary>
+            Contains Fid and Fmd format types.
+            </summary>
+        </member>
+        <member name="T:DPUruNet.Constants.Formats.Fid">
+            <summary>
+            Bidirectional image conversion format.
+            </summary>
+        </member>
+        <member name="T:DPUruNet.Constants.Formats.Fmd">
+            <summary>
+            Minutiae output formats.
+            </summary>
+        </member>
+        <member name="T:DPUruNet.Constants.ResultCode">
+            <summary>
+            <para>Result codes:</para>
+            <para>DP_SUCCESS - Success</para>
+            <para>DP_NOT_IMPLEMENTED - Signals that particular function is not implemented. </para>
+            <para>DP_FAILURE - “Catch-all” generic failure code. Can be returned by all API calls in case of failure, when the reason of failure unknown or cannot be specified.</para>
+            <para>DP_NO_DATA - No data is available.</para>
+            <para>DP_MORE_DATA - Memory allocated by application is not enough to contain data which is expected.</para>
+            <para>DP_INVALID_PARAMETER - Returned when one or more parameters passed to the API call are not valid.</para>
+            <para>DP_INVALID_DEVICE - Returned when the current Reader object is not associated with a valid device.</para>
+            <para>DP_DEVICE_BUSY - Returned when API call cannot be completed because another operation is in progress.</para>
+            <para>DP_DEVICE_FAILURE - Returned in case of reader not working properly.</para>
+            <para>DP_INVALID_Fid - Returned when the image data received by the SDK is invalid.</para>
+            <para>DP_TOO_SMALL_AREA - Returned if the image is too small.</para>
+            <para>DP_INVALID_Fmd - Returned when the minutiae data received by the SDK is invalid.</para>
+            <para>DP_ENROLLMENT_IN_PROGRESS - Enrollment operation is in progress.</para>
+            <para>DP_ENROLLMENT_NOT_STARTED - Enrollment operation has not begun.</para>
+            <para>DP_ENROLLMENT_NOT_READY - Not enough in the pool of Fmds to create enrollment Fmd.</para>
+            <para>DP_VERSION_INCOMPATIBILITY - Returned when version of the deserialized data is greater than the installed wrapper’s version.</para>
+            </summary>
+        </member>
+        <member name="T:DPUruNet.DataResult`1">
+            <summary>
+            Contains result code and fingerprint data.
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="P:DPUruNet.DataResult`1.Data">
+            <summary>
+            Data object, i..e, an FMD or FID.
+            </summary>
+        </member>
+        <member name="T:DPUruNet.SDKException">
+            <summary>
+            Custom exception container containing a result code and inner exception.
+            </summary>
+        </member>
+        <member name="T:DPUruNet.PointerUtilities">
+            <summary>
+            Pointer utility object containing various pointer utilities
+            </summary>
+        </member>
+        <member name="M:DPUruNet.PointerUtilities.GetEmptyDataIntPtr(System.Int32)">
+            <summary>
+            Create a pointer to empty memory.
+            </summary>
+            <param name="size">Size of target byte array containg all zero's</param>
+            <returns>Pointer to empty memory</returns>
+        </member>
+        <member name="M:DPUruNet.PointerUtilities.GetDataIntPtr(System.Byte[])">
+            <summary>
+            Create a pointer to filled memory.
+            </summary>
+            <param name="bytes">Memory block</param>
+            <returns>Pointer to filled memory</returns>
+        </member>
+        <member name="M:DPUruNet.PointerUtilities.GetPointerBytes(System.IntPtr,System.Int32)">
+            <summary>
+            Get bytes that the specified pointer points to.
+            </summary>
+            <param name="ptrOut">Pointer to filled memory</param>
+            <param name="size">Size of memory block</param>
+            <returns>Byte array</returns>
+        </member>
+        <!-- Badly formed XML comment ignored for member "F:DPUruNet.NativeMethods.DPFPDD_CAPTURE_RESULT.success" -->
+        <!-- Badly formed XML comment ignored for member "F:DPUruNet.NativeMethods.DPFPDD_CAPTURE_RESULT.quality" -->
+        <!-- Badly formed XML comment ignored for member "F:DPUruNet.NativeMethods.DPFPDD_CAPTURE_RESULT.score" -->
+        <!-- Badly formed XML comment ignored for member "F:DPUruNet.NativeMethods.DPFPDD_CAPTURE_RESULT.info" -->
+        <!-- Badly formed XML comment ignored for member "F:DPUruNet.NativeMethods.DPFPDD_IMAGE_INFO.width" -->
+        <!-- Badly formed XML comment ignored for member "F:DPUruNet.NativeMethods.DPFPDD_IMAGE_INFO.height" -->
+        <!-- Badly formed XML comment ignored for member "F:DPUruNet.NativeMethods.DPFPDD_IMAGE_INFO.res" -->
+        <!-- Badly formed XML comment ignored for member "F:DPUruNet.NativeMethods.DPFPDD_IMAGE_INFO.bpp" -->
+        <!-- Badly formed XML comment ignored for member "F:DPUruNet.NativeMethods.DPFPDD_CAPTURE_PARAM.image_fmt" -->
+        <!-- Badly formed XML comment ignored for member "F:DPUruNet.NativeMethods.DPFPDD_CAPTURE_PARAM.image_proc" -->
+        <!-- Badly formed XML comment ignored for member "F:DPUruNet.NativeMethods.DPFPDD_CAPTURE_PARAM.image_res" -->
+        <!-- Badly formed XML comment ignored for member "F:DPUruNet.NativeMethods.DPFPDD_DEV_CAPS.can_capture_image" -->
+        <!-- Badly formed XML comment ignored for member "F:DPUruNet.NativeMethods.DPFPDD_DEV_CAPS.can_stream_image" -->
+        <!-- Badly formed XML comment ignored for member "F:DPUruNet.NativeMethods.DPFPDD_DEV_CAPS.can_extract_features" -->
+        <!-- Badly formed XML comment ignored for member "F:DPUruNet.NativeMethods.DPFPDD_DEV_CAPS.can_match" -->
+        <!-- Badly formed XML comment ignored for member "F:DPUruNet.NativeMethods.DPFPDD_DEV_CAPS.can_identify" -->
+        <!-- Badly formed XML comment ignored for member "F:DPUruNet.NativeMethods.DPFPDD_DEV_CAPS.has_fp_storage" -->
+        <!-- Badly formed XML comment ignored for member "F:DPUruNet.NativeMethods.DPFPDD_DEV_CAPS.indicator_type" -->
+        <!-- Badly formed XML comment ignored for member "F:DPUruNet.NativeMethods.DPFPDD_DEV_CAPS.has_pwr_mgmt" -->
+        <!-- Badly formed XML comment ignored for member "F:DPUruNet.NativeMethods.DPFPDD_DEV_CAPS.has_calibration" -->
+        <!-- Badly formed XML comment ignored for member "F:DPUruNet.NativeMethods.DPFPDD_DEV_CAPS.piv_compliant" -->
+        <!-- Badly formed XML comment ignored for member "F:DPUruNet.NativeMethods.DPFPDD_DEV_CAPS.resolution_cnt" -->
+        <!-- Badly formed XML comment ignored for member "F:DPUruNet.NativeMethods.DPFPDD_DEV_CAPS.resolutions" -->
+        <!-- Badly formed XML comment ignored for member "F:DPUruNet.NativeMethods.DPFPDD_HW_VERSION.fw_ver" -->
+        <!-- Badly formed XML comment ignored for member "F:DPUruNet.NativeMethods.DPFPDD_HW_VERSION.bcd_rev" -->
+        <!-- Badly formed XML comment ignored for member "F:DPUruNet.NativeMethods.DPFPDD_HW_ID.product_id" -->
+        <!-- Badly formed XML comment ignored for member "F:DPUruNet.NativeMethods.DPFPDD_DEV_STATUS.status" -->
+        <!-- Badly formed XML comment ignored for member "F:DPUruNet.NativeMethods.DPFPDD_DEV_STATUS.finger_detected" -->
+        <!-- Badly formed XML comment ignored for member "F:DPUruNet.NativeMethods.DPFPDD_DEV_STATUS.data" -->
+        <!-- Badly formed XML comment ignored for member "F:DPUruNet.NativeMethods.DPFPDD_HW_DESCR.product_name" -->
+        <!-- Badly formed XML comment ignored for member "F:DPUruNet.NativeMethods.DPFPDD_HW_DESCR.serial_num" -->
+        <!-- Badly formed XML comment ignored for member "F:DPUruNet.NativeMethods.DPFPDD_DEV_INFO.name" -->
+        <!-- Badly formed XML comment ignored for member "F:DPUruNet.NativeMethods.DPFPDD_DEV_INFO.descr" -->
+        <!-- Badly formed XML comment ignored for member "F:DPUruNet.NativeMethods.DPFPDD_DEV_INFO.id" -->
+        <!-- Badly formed XML comment ignored for member "F:DPUruNet.NativeMethods.DPFPDD_DEV_INFO.ver" -->
+        <!-- Badly formed XML comment ignored for member "F:DPUruNet.NativeMethods.DPFPDD_DEV_INFO.modality" -->
+        <!-- Badly formed XML comment ignored for member "F:DPUruNet.NativeMethods.DPFPDD_DEV_INFO.technology" -->
+        <member name="T:DPUruNet.Importer">
+            <summary>
+            Contains static methods to extract fingerprint data.
+            </summary>
+        </member>
+        <member name="M:DPUruNet.Importer.ImportFmd(System.Byte[],DPUruNet.Constants.Formats.Fmd,DPUruNet.Constants.Formats.Fmd)">
+            <summary>
+            Imports an Fmd from any supported format to any other supported format.
+            </summary>
+            <param name="fmdIn">input Fmd</param>
+            <param name="formatIn">input format</param>
+            <returns>
+            DP_SUCCESS: Fmd was extracted;
+            DP_INVALID_PARAMETER: One or more parameters passed are invalid;
+            DP_FAILURE: Failed to extract Fmd.
+            </returns>
+        </member>
+        <member name="M:DPUruNet.Importer.ImportDpFid(System.Byte[],DPUruNet.Constants.Formats.Fid,System.Int32,System.Boolean)">
+            <summary>
+            \brief Imports legacy DigitalPersona image to the image in ANSI or ISO format.
+            </summary>
+            <param name="fidIn">Fid to convert</param>
+            <param name="resolutionIn">input resolution</param>
+            <param name="formatOut">output format</param>
+            <param name="rotate">rotate the image</param>
+            <returns>
+            DP_SUCCESS: Fid was created
+            DP_FAILURE: Failed to create Fid
+            </returns>
+        </member>
+        <member name="M:DPUruNet.Importer.ImportFid(System.Byte[],DPUruNet.Constants.Formats.Fid)">
+            <summary>
+            \brief Imports an Fid.
+            </summary>
+            <param name="fidIn">Fid to convert</param>
+            <param name="formatOut">input format</param>
+            <returns>
+            DP_SUCCESS: Fid was created
+            DP_FAILURE: Failed to create Fid
+            </returns>
+        </member>
+        <member name="T:DPUruNet.Fingerbase">
+            <summary>
+            Base container class for data common to all fingerprint data strcutures.
+            </summary>
+        </member>
+        <member name="M:DPUruNet.Fingerbase.#ctor(System.Byte[],System.Int32,System.String)">
+            <summary>
+            Constructor for container class holding properties and methods common to all fingerprint data structures.
+            </summary>
+            <param name="bytes">Raw bytes of fingerprint data</param>
+            <param name="format">Image format</param>
+            <param name="version">.NET Wrapper version the fingerprint data originated from</param>
+        </member>
+        <member name="M:DPUruNet.Fingerbase.GetXmlNodeString(System.Xml.XmlNodeList)">
+            <summary>
+            Private helper class to retrieve string data from an XmlNodeList.
+            </summary>
+            <param name="node">Node containing data</param>
+            <returns></returns>
+        </member>
+        <member name="M:DPUruNet.Fingerbase.SerializeXml(System.Byte[],System.Int32,System.String)">
+            <summary>
+            Serialize XML helper class.
+            </summary>
+            <param name="bytes">Raw bytes of fingerprint data</param>
+            <param name="format">Image format</param>
+            <param name="version">.NET Wrapper version the fingerprint data originated from</param>
+            <returns></returns>
+        </member>
+        <member name="M:DPUruNet.Fingerbase.IsValid(System.Byte[],System.Int32,System.String)">
+            <summary>
+            Validate the data.
+            </summary>
+            <param name="bytes">Raw bytes of fingerprint data</param>
+            <param name="format">Image format</param>
+            <param name="version">.NET Wrapper version the fingerprint data originated from</param>
+            <returns>
+            DP_SUCCESS = bytes, format, and version are valid.
+            DP_VERSION_INCOMPATIBILITY = version of data is not compatible with the wrapper's version.
+            DP_INVALID_PARAMETER = one or more parameters has an incorrect value.
+            </returns>
+        </member>
+        <member name="M:DPUruNet.Fingerbase.readBytes(System.Byte[],System.Int32,System.Int32)">
+            <summary>
+            Reads an integer from bytes.
+            </summary>
+            <param name="bytes">Raw bytes of fingerprint data</param>
+            <param name="index">Index of where bytes are read from</param>
+            <param name="numbytes">Number of bytes to read</param>
+            <returns></returns>
+        </member>
+        <member name="M:DPUruNet.Fingerbase.ReverseBytes(System.Byte[])">
+            <summary>
+            Reverses a byte array.
+            </summary>
+            <param name="inArray">Array to reverse</param>
+            <returns></returns>
+        </member>
+        <member name="P:DPUruNet.Fingerbase.Bytes">
+            <summary>
+            Raw bytes of fingerprint data.
+            </summary>
+        </member>
+        <member name="P:DPUruNet.Fingerbase.Version">
+            <summary>
+            .NET Wrapper version the fingerprint data originated from.
+            </summary>
+        </member>
+        <member name="T:DPUruNet.Fmd">
+            <summary>
+            Class represents Fingerprint Minutiae Data (FMD).
+            
+            Class reflects ANSI INSITS 378-2004 and ISO IEC 19794-2-2005 formats, as well as legacy DigitalPersona templates.
+            </summary>
+        </member>
+        <member name="M:DPUruNet.Fmd.#ctor(System.Byte[],System.Int32,System.String)">
+            <summary>
+            Overloaded constructor.
+            </summary>
+            <param name="bytes">Raw bytes of fingerprint data</param>
+            <param name="format">Format (i.e., ANSI, ISO, ...)</param>
+            <param name="version">.NET Wrapper version the fingerprint data originated from</param>
+        </member>
+        <member name="M:DPUruNet.Fmd.DeserializeXml(System.String)">
+            <summary>
+            Deserialize string data into an Fmd object.
+            </summary>
+            <param name="data">Serialized Fmd</param>
+            <returns>Fmd deserialized.</returns>
+        </member>
+        <member name="M:DPUruNet.Fmd.SerializeXml(DPUruNet.Fmd)">
+            <summary>
+            Serialize Fml object to xml string.
+            </summary>
+            <param name="obj">Fmd</param>
+            <returns>Fmd serialized to string.</returns>
+        </member>
+        <member name="M:DPUruNet.Fmd.LoadViews">
+            <summary>
+            Load views.
+            </summary>
+        </member>
+        <member name="P:DPUruNet.Fmd.Format">
+            <summary>
+            Image format (i.e., ANSI, ISO, ...)
+            </summary>
+        </member>
+        <member name="P:DPUruNet.Fmd.Width">
+            <summary>
+            Width.
+            </summary>
+        </member>
+        <member name="P:DPUruNet.Fmd.ViewCount">
+            <summary>
+            View count.
+            </summary>
+        </member>
+        <member name="P:DPUruNet.Fmd.Height">
+            <summary>
+            Height.
+            </summary>
+        </member>
+        <member name="P:DPUruNet.Fmd.CaptureEquipmentIds">
+            <summary>
+            Capture equipment ids.
+            </summary>
+        </member>
+        <member name="P:DPUruNet.Fmd.CaptureEquipmentComp">
+            <summary>
+            Capture equipment comp.
+            </summary>
+        </member>
+        <member name="P:DPUruNet.Fmd.Views">
+            <summary>
+            Views contained within the Fmd.
+            </summary>
+        </member>
+        <!-- Badly formed XML comment ignored for member "F:DPUruNet.Fmd.DPFJ_Fmd_VIEW_PARAMS.view_number" -->
+        <!-- Badly formed XML comment ignored for member "F:DPUruNet.Fmd.DPFJ_Fmd_VIEW_PARAMS.impression_type" -->
+        <!-- Badly formed XML comment ignored for member "F:DPUruNet.Fmd.DPFJ_Fmd_VIEW_PARAMS.quality" -->
+        <!-- Badly formed XML comment ignored for member "F:DPUruNet.Fmd.DPFJ_Fmd_VIEW_PARAMS.minutia_cnt" -->
+        <!-- Badly formed XML comment ignored for member "F:DPUruNet.Fmd.DPFJ_Fmd_VIEW_PARAMS.ext_block_length" -->
+        <!-- Badly formed XML comment ignored for member "F:DPUruNet.Fmd.DPFJ_Fmd_VIEW_PARAMS.ext_block" -->
+        <member name="T:DPUruNet.Fmd.Fmv">
+            <summary>
+            Fingerprint Minutiae View.
+            </summary>
+        </member>
+        <member name="M:DPUruNet.Fmd.Fmv.#ctor(System.Byte[])">
+            <summary>
+            Constructor for an Fmv.
+            </summary>
+        </member>
+        <member name="P:DPUruNet.Fmd.Fmv.Bytes">
+            <summary>
+            Raw view bytes.
+            </summary>
+        </member>
+        <member name="P:DPUruNet.Fmd.Fmv.FingerPosition">
+            <summary>
+            Finger position.
+            </summary>
+        </member>
+        <member name="P:DPUruNet.Fmd.Fmv.MinutiaeCount">
+            <summary>
+            Minutiae count.
+            </summary>
+        </member>
+        <member name="P:DPUruNet.Fmd.Fmv.Quality">
+            <summary>
+            Quality score.
+            </summary>
+        </member>
+        <member name="P:DPUruNet.Fmd.Fmv.ViewNumber">
+            <summary>
+            View number.
+            </summary>
+        </member>
+        <!-- Badly formed XML comment ignored for member "F:DPUruNet.Fmd.Fmv.DPFJ_Fmd_VIEW_PARAMS.view_number" -->
+        <!-- Badly formed XML comment ignored for member "F:DPUruNet.Fmd.Fmv.DPFJ_Fmd_VIEW_PARAMS.impression_type" -->
+        <!-- Badly formed XML comment ignored for member "F:DPUruNet.Fmd.Fmv.DPFJ_Fmd_VIEW_PARAMS.quality" -->
+        <!-- Badly formed XML comment ignored for member "F:DPUruNet.Fmd.Fmv.DPFJ_Fmd_VIEW_PARAMS.minutia_cnt" -->
+        <!-- Badly formed XML comment ignored for member "F:DPUruNet.Fmd.Fmv.DPFJ_Fmd_VIEW_PARAMS.ext_block_length" -->
+        <!-- Badly formed XML comment ignored for member "F:DPUruNet.Fmd.Fmv.DPFJ_Fmd_VIEW_PARAMS.ext_block" -->
+        <member name="T:DPUruNet.Fid">
+            <summary>
+            Class represents Fingerprint Image Data (FID).
+            
+            Class reflect ANSI INSITS 381-2004 and ISO IEC 19794-4-2005 formats.
+            </summary>
+        </member>
+        <member name="M:DPUruNet.Fid.#ctor(System.Byte[],System.Int32,System.String)">
+            <summary>
+            Constructor for Fid.
+            </summary>
+            <param name="bytes">Raw bytes of fingerprint data</param>
+            <param name="format">Format (i.e., ANSI, ISO, ...)</param>
+            <param name="version">.NET Wrapper version the fingerprint data originated from</param>
+        </member>
+        <member name="M:DPUruNet.Fid.LoadViews">
+            <summary>
+            Load views.
+            </summary>
+        </member>
+        <member name="M:DPUruNet.Fid.DeserializeXml(System.String)">
+            <summary>
+            Deserialize string data into an FID object.
+            </summary>
+            <param name="data">Serialized FID</param>
+        </member>
+        <member name="M:DPUruNet.Fid.SerializeXml(DPUruNet.Fid)">
+            <summary>
+            Serialize Fml object to xml string.
+            </summary>
+            <param name="obj">FID to serialize</param>
+            <returns>FID serialized to string.</returns>
+        </member>
+        <member name="P:DPUruNet.Fid.Format">
+            <summary>
+            Image format (i.e., ANSI, ISO, ...)
+            </summary>
+        </member>
+        <member name="P:DPUruNet.Fid.CbeffId">
+            <summary>
+            CBEFF ID.
+            </summary>
+        </member>
+        <member name="P:DPUruNet.Fid.Resolution">
+            <summary>
+            Resolution.
+            </summary>
+        </member>
+        <member name="P:DPUruNet.Fid.AquisitionLevel">
+            <summary>
+            Aquisition level.
+            </summary>
+        </member>
+        <member name="P:DPUruNet.Fid.Bpp">
+            <summary>
+            Bits per pixel.
+            </summary>
+        </member>
+        <member name="P:DPUruNet.Fid.CaptureDeviceId">
+            <summary>
+            Capture device id.
+            </summary>
+        </member>
+        <member name="P:DPUruNet.Fid.Compression">
+            <summary>
+            Compression type.
+            </summary>
+        </member>
+        <member name="P:DPUruNet.Fid.FingerCount">
+            <summary>
+            Finger count.
+            </summary>
+        </member>
+        <member name="P:DPUruNet.Fid.ImageResolution">
+            <summary>
+            Image resolution.
+            </summary>
+        </member>
+        <member name="P:DPUruNet.Fid.ScaleUnits">
+            <summary>
+            Scale units
+            </summary>
+        </member>
+        <member name="P:DPUruNet.Fid.ScanResolution">
+            <summary>
+            Scan resolution.
+            </summary>
+        </member>
+        <member name="P:DPUruNet.Fid.Views">
+            <summary>
+            Fiv list.
+            </summary>
+        </member>
+        <!-- Badly formed XML comment ignored for member "F:DPUruNet.Fid.DPFJ_Fid_RECORD_PARAMS.cbeff_id" -->
+        <!-- Badly formed XML comment ignored for member "F:DPUruNet.Fid.DPFJ_Fid_RECORD_PARAMS.capture_device_id" -->
+        <!-- Badly formed XML comment ignored for member "F:DPUruNet.Fid.DPFJ_Fid_RECORD_PARAMS.acquisition_level" -->
+        <!-- Badly formed XML comment ignored for member "F:DPUruNet.Fid.DPFJ_Fid_RECORD_PARAMS.finger_cnt" -->
+        <!-- Badly formed XML comment ignored for member "F:DPUruNet.Fid.DPFJ_Fid_RECORD_PARAMS.scale_units" -->
+        <!-- Badly formed XML comment ignored for member "F:DPUruNet.Fid.DPFJ_Fid_RECORD_PARAMS.scan_res" -->
+        <!-- Badly formed XML comment ignored for member "F:DPUruNet.Fid.DPFJ_Fid_RECORD_PARAMS.image_res" -->
+        <!-- Badly formed XML comment ignored for member "F:DPUruNet.Fid.DPFJ_Fid_RECORD_PARAMS.bpp" -->
+        <!-- Badly formed XML comment ignored for member "F:DPUruNet.Fid.DPFJ_Fid_RECORD_PARAMS.compression" -->
+        <!-- Badly formed XML comment ignored for member "F:DPUruNet.Fid.DPFJ_Fid_VIEW_PARAMS.finger_position" -->
+        <!-- Badly formed XML comment ignored for member "F:DPUruNet.Fid.DPFJ_Fid_VIEW_PARAMS.view_cnt" -->
+        <!-- Badly formed XML comment ignored for member "F:DPUruNet.Fid.DPFJ_Fid_VIEW_PARAMS.view_number" -->
+        <!-- Badly formed XML comment ignored for member "F:DPUruNet.Fid.DPFJ_Fid_VIEW_PARAMS.quality" -->
+        <!-- Badly formed XML comment ignored for member "F:DPUruNet.Fid.DPFJ_Fid_VIEW_PARAMS.impression_type" -->
+        <!-- Badly formed XML comment ignored for member "F:DPUruNet.Fid.DPFJ_Fid_VIEW_PARAMS.width" -->
+        <!-- Badly formed XML comment ignored for member "F:DPUruNet.Fid.DPFJ_Fid_VIEW_PARAMS.height" -->
+        <!-- Badly formed XML comment ignored for member "F:DPUruNet.Fid.DPFJ_Fid_VIEW_PARAMS.view_data" -->
+        <member name="T:DPUruNet.Fid.Fiv">
+            <summary>
+            Fingerprint Image View.
+            </summary>
+        </member>
+        <member name="M:DPUruNet.Fid.Fiv.#ctor(System.Byte[])">
+            <summary>
+            Constructor for Fiv.
+            </summary>
+            <param name="bytes">Raw bytes of fingerprint data</param>
+        </member>
+        <member name="P:DPUruNet.Fid.Fiv.Bytes">
+            <summary>
+            Raw view bytes.
+            </summary>
+        </member>
+        <member name="P:DPUruNet.Fid.Fiv.RawImage">
+            <summary>
+            Image row-column data.
+            </summary>
+        </member>
+        <member name="P:DPUruNet.Fid.Fiv.Height">
+            <summary>
+            Height.
+            </summary>
+        </member>
+        <member name="P:DPUruNet.Fid.Fiv.Width">
+            <summary>
+            Width.
+            </summary>
+        </member>
+        <member name="P:DPUruNet.Fid.Fiv.Depth">
+            <summary>
+            Depth.
+            </summary>
+        </member>
+        <member name="P:DPUruNet.Fid.Fiv.FingerPosition">
+            <summary>
+            Finger position.
+            </summary>
+        </member>
+        <member name="P:DPUruNet.Fid.Fiv.ImpressionType">
+            <summary>
+            Impression type.
+            </summary>
+        </member>
+        <member name="P:DPUruNet.Fid.Fiv.ViewCount">
+            <summary>
+            View count.
+            </summary>
+        </member>
+        <member name="P:DPUruNet.Fid.Fiv.ViewNumber">
+            <summary>
+            View number.
+            </summary>
+        </member>
+        <!-- Badly formed XML comment ignored for member "F:DPUruNet.Fid.Fiv.DPFJ_Fid_VIEW_PARAMS.finger_position" -->
+        <!-- Badly formed XML comment ignored for member "F:DPUruNet.Fid.Fiv.DPFJ_Fid_VIEW_PARAMS.view_cnt" -->
+        <!-- Badly formed XML comment ignored for member "F:DPUruNet.Fid.Fiv.DPFJ_Fid_VIEW_PARAMS.view_number" -->
+        <!-- Badly formed XML comment ignored for member "F:DPUruNet.Fid.Fiv.DPFJ_Fid_VIEW_PARAMS.quality" -->
+        <!-- Badly formed XML comment ignored for member "F:DPUruNet.Fid.Fiv.DPFJ_Fid_VIEW_PARAMS.impression_type" -->
+        <!-- Badly formed XML comment ignored for member "F:DPUruNet.Fid.Fiv.DPFJ_Fid_VIEW_PARAMS.width" -->
+        <!-- Badly formed XML comment ignored for member "F:DPUruNet.Fid.Fiv.DPFJ_Fid_VIEW_PARAMS.height" -->
+        <!-- Badly formed XML comment ignored for member "F:DPUruNet.Fid.Fiv.DPFJ_Fid_VIEW_PARAMS.view_data" -->
+        <member name="T:DPUruNet.Enrollment">
+            <summary>
+            Contains a static method to enroll fingers and create an enrollment Fmd.
+            </summary>
+        </member>
+        <member name="M:DPUruNet.Enrollment.CreateEnrollmentFmd(DPUruNet.Constants.Formats.Fmd,System.Collections.Generic.IEnumerable{DPUruNet.Fmd})">
+            <summary>
+            <para>Creates and returns enrollment FMD.</para>        
+            <para>Create an Fmd for an enrolled finger. The output Fmd is suitable for storing in a database of enrolled users.   </para>
+            <para>Some applications like voting, banking and law enforcement require that you check for duplicate fingerprints before storing a new fingerprint in the database. 	</para>
+            <para>For ANSI/ISO formats, the enrollment Fmd is a standard Fmd (the same as an Fmd generated by the extraction function). </para>
+            </summary>
+            <param name="format">Enrollment FMD format</param>
+            <param name="gallery">FMDs to enroll</param>
+            <returns>        
+             DP_SUCCESS:  Fmd created;
+             DP_MORE_DATA: Fmd created, but allocated memory is not sufficient. The required memory size is in the fmd_size;
+             DP_INVALID_PARAMETER: One or more parameters passed are invalid;
+             DP_FAILURE: Unknown error.
+            </returns>
+        </member>
+        <member name="T:DPUruNet.FeatureExtraction">
+            <summary>
+            Class to extract an FMD from a raw image or an FID
+            </summary>
+        </member>
+        <member name="M:DPUruNet.FeatureExtraction.CreateFmdFromFid(DPUruNet.Fid,DPUruNet.Constants.Formats.Fmd)">
+            <summary>
+            <para>Extracts features and creates an Fmd from an ANSI or ISO image. </para>
+            <para>This function works with Fids that have:</para>
+             <para>- 8 bits per pixel</para>
+             <para>- no padding</para>
+             <para>- square pixels (dpi is the same for horizontal and vertical)</para>     
+            </summary>
+            <param name="fid">FID to extract features</param>
+            <param name="formatOut">Format of the FMD</param>
+            <returns>
+            DP_SUCCESS: Fmd was created;
+            DP_INVALID_PARAMETER: One or more parameters passed are invalid.
+            DP_FAILURE: Failed to create Fmd.
+            </returns>
+        </member>
+        <member name="M:DPUruNet.FeatureExtraction.CreateFmdFromRaw(System.Byte[],System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,DPUruNet.Constants.Formats.Fmd)">
+            <summary>
+            Extracts features and creates an FMD from a raw image.
+            
+            <para>When you do a fingerprint capture, you can receive a raw image or a Fid. If you specify a raw image, you can then extract features into an Fmd using this function.</para>
+            <para>The raw image is just a buffer of pixels. This function works with raw images that have:</para>
+             <para>- 8 bits per pixel</para>
+             <para>- no padding</para>
+             <para>- square pixels (dpi is the same for horizontal and vertical)</para>     
+            </summary>
+            <param name="rawImageData">Image data</param>
+            <param name="fingerPosition">Position of the finger</param>
+            <param name="CbeffId">CBEFF product ID, from IBIA registry</param>
+            <param name="width">Width of the image</param>
+            <param name="height">Height of the image</param>
+            <param name="resolution">Resolution of the finger in dpi</param>
+            <param name="formatOut">Format of the FMD</param>
+            <returns>
+            DP_SUCCESS: Fmd was created;
+            DP_INVALID_PARAMETER: One or more parameters passed are invalid.
+            DP_FAILURE: Failed to create Fmd.
+            </returns>
+        </member>
+        <member name="T:DPUruNet.Reader">
+            <summary>
+            Represents the a physical fingerprint reader.  Contains methods to capture and stream an Fid.  Contains details about the reader, its capabilities, and current status.  
+            </summary>
+        </member>
+        <member name="M:DPUruNet.Reader.GetImage(DPUruNet.Constants.Formats.Fid,DPUruNet.Constants.CaptureProcessing,System.Int32,System.Int32,System.Boolean)">
+            <summary>
+            Private method to aggregate capture and streaming methods.
+            </summary>
+            <param name="format">Format of the image</param>
+            <param name="processing">Processing of the image</param>
+            <param name="timeout">Defines timeout in milliseconds (unsigned int); (-1) means no timeout (function will block until a fingerprint is captured)</param>
+            <param name="resolution">Resolution of the image</param>
+            <param name="isStream">Whether to capture or stream an image</param>
+            <returns></returns>        
+        </member>
+        <member name="M:DPUruNet.Reader.Capture(DPUruNet.Constants.Formats.Fid,DPUruNet.Constants.CaptureProcessing,System.Int32,System.Int32)">
+            <summary>
+            This function captures a fingerprint image from the opened reader device.  This function signals the device that a fingerprint is expected and waits until a fingerprint is received.  This function blocks until an image is captured, capture fails or timeout is expired. This function cannot be called in streaming mode. If memory is not sufficient for the image, then DP_E_MORE_DATA will be returned. 
+            </summary>
+            <param name="format">Format of the image</param>
+            <param name="processing">Processing of the image</param>
+            <param name="timeout">Timeout in milliseconds; -1 means no timeout (function will block until a fingerprint is captured or a cancel is caused)</param>
+            <param name="resolution">Resolution of the image</param>
+            <returns>
+             DPFPDD_SUCCESS: Image captured. Extended result is in capture_result;
+             DPFPDD_E_FAILURE:  Unexpected failure;
+             DPFPDD_E_INVALID_DEVICE: Invalid reader;
+             DPFPDD_E_DEVICE_BUSY: Another operation is in progress;
+             DPFPDD_E_INVALID_PARAMETER: Wrong data type or image format in the capture_parm;
+             DPFPDD_E_DEVICE_FAILURE: Failed to start capture, reader is not functioning properly.
+            </returns>
+        </member>
+        <member name="M:DPUruNet.Reader.CaptureAsync(DPUruNet.Constants.Formats.Fid,DPUruNet.Constants.CaptureProcessing,System.Int32)">
+            <summary>
+            /**
+            \brief Capture a fingerprint image asynchronously.
+            This function starts asyncronous capture on the opened reader device.  
+            This function signals the device that a fingerprint is expected and end exits.	
+            \param dev             Reader handle, as obtained from dpfpdd_open()
+            \param capture_parm	   Defines data type and image format (per DPFPDD_CAPTURE_PARAM)
+            \param context         Client context, passed into the callback
+            \param callback        Address of the callback function, to be called when image is ready
+            \return DPFPDD_SUCCESS:             Image captured. Extended result is in capture_result
+            \return DPFPDD_E_FAILURE:           Unexpected failure
+            \return DPFPDD_E_INVALID_DEVICE:    Invalid reader handle
+            \return DPFPDD_E_DEVICE_BUSY:       Another operation is in progress
+            \return DPFPDD_E_INVALID_PARAMETER: Wrong data type or image format in the capture_parm
+            \return DPFPDD_E_DEVICE_FAILURE:    Failed to start capture, reader is not functioning properly
+            */
+            </summary>
+            <param name="format"></param>
+            <param name="processing"></param>
+            <param name="resolution"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DPUruNet.Reader.CancelCapture">
+            <summary>
+            Cancels pending capture.
+            </summary>
+            <returns>
+            DPFPDD_SUCCESS: Capture canceled;
+            DPFPDD_E_FAILURE: Unexpected failure;
+            DPFPDD_E_INVALID_DEVICE: Invalid reader;
+            DPFPDD_E_DEVICE_FAILURE: Failed to cancel capture, reader is not functioning properly.
+            </returns>
+        </member>
+        <member name="M:DPUruNet.Reader.StartStreaming">
+            <summary>
+            Puts reader into streaming mode.
+            
+            Not all readers support this mode. When the reader is in streaming mode, the application can only call 
+            GetStreamImage() to acquire images from the stream.
+            </summary>
+            <returns>
+            DPFPDD_SUCCESS: Reader put into streaming mode;
+            DPFPDD_E_FAILURE: Unexpected failure;
+            DPFPDD_E_INVALID_DEVICE: Invalid reader;
+            DPFPDD_E_INVALID_PARAMETER: Wrong data type or image format in the capture_parm;
+            DPFPDD_E_DEVICE_BUSY: Another operation is in progress;
+            DPFPDD_E_DEVICE_FAILURE: Failed to start streaming, reader is not functioning properly.
+            </returns>
+        </member>
+        <member name="M:DPUruNet.Reader.GetStreamImage(DPUruNet.Constants.Formats.Fid,DPUruNet.Constants.CaptureProcessing,System.Int32)">
+            <summary>
+            Takes an image from the stream.
+            	
+            After the reader is put into streaming mode this function takes an image from the stream. After this function returns, the  
+            reader stays in the streaming mode. Frame selection, scoring or other image processing is not performed.
+            	
+            If the memory is not sufficient for the image, then 
+            DPFPDD_E_MORE_DATA will be returned. 
+            For every image from the stream, the driver provides a score (in capture_result.score) and quality feedback (in capture_result.quailty). 
+            </summary>
+            <param name="format">Format of the image</param>
+            <param name="processing">Processing of the image</param>
+            <param name="resolution">Resolution of the image</param>
+            <returns>         
+             DPFPDD_SUCCESS: Image acquired from the stream. Extended result is in capture_result;
+             DPFPDD_E_FAILURE: Unexpected failure;
+             DPFPDD_E_INVALID_DEVICE: Invalid reader;
+             DPFPDD_E_DEVICE_BUSY: Another operation is in progress;
+             DPFPDD_E_MORE_DATA: Insufficient  memory is allocated for the image_data, the required size is in the image_size;
+             DPFPDD_E_INVALID_PARAMETER: Wrong data type or image format in the capture_parm;
+             DPFPDD_E_DEVICE_FAILURE: Failed to acquire image from the stream, reader is not functioning properly.
+            </returns>
+        </member>
+        <member name="M:DPUruNet.Reader.StopStreaming">
+            <summary>
+            Stops streaming mode
+            </summary>
+            <returns>
+             DPFPDD_SUCCESS: Streaming was stopped;
+             DPFPDD_E_FAILURE: Unexpected failure;
+             DPFPDD_E_INVALID_DEVICE: Invalid reader;
+             DPFPDD_E_DEVICE_FAILURE: Failed to stop streaming, reader is not functioning properly.
+            </returns>
+        </member>
+        <member name="M:DPUruNet.Reader.Open(DPUruNet.Constants.CapturePriority)">
+            <summary>
+            Opens a reader and populates ReaderCapabilities sub-class.  
+            </summary>
+            <returns>
+            DPFPDD_SUCCESS: Reader was successfullly opened;
+            DPFPDD_E_FAILURE: Unexpected failure;
+            DPFPDD_E_INVALID_DEVICE: No reader with this name found;
+            DPFPDD_E_DEVICE_BUSY: Reader is already opened by the same or another process;
+            DPFPDD_E_DEVICE_FAILURE: Failed to open the reader.
+            </returns>
+        </member>
+        <member name="M:DPUruNet.Reader.GetDeviceCapabilities">
+            <summary>
+            Private retrieve device capabilities.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:DPUruNet.Reader.Dispose">
+            <summary>
+            Releases the reader.
+            </summary>
+        </member>
+        <member name="M:DPUruNet.Reader.Calibrate">
+            <summary>
+            Calibrates the reader.
+            
+            This function calibrates a reader and blocks until the calibration is complete.  It can take several seconds to calibrate for some devices. 
+            </summary>
+            <returns>
+            DPFPDD_SUCCESS: Calibration succeeded;
+            DPFPDD_E_FAILURE: Unexpected failure;
+            DPFPDD_E_INVALID_DEVICE: Invalid reader;
+            DPFPDD_E_DEVICE_BUSY: Another operation is in progress;
+            DPFPDD_E_DEVICE_FAILURE: Failed to calibrate, reader is not functioning properly.
+            </returns>
+        </member>
+        <member name="M:DPUruNet.Reader.GetStatus">
+            <summary>
+            Populates the ReaderStatus sub-class.
+            </summary>
+            <returns>
+            DPFPDD_SUCCESS: Reader status obtained;
+            DPFPDD_E_FAILURE: Unexpected failure;
+            DPFPDD_E_INVALID_DEVICE: Invalid reader;
+            </returns>
+        </member>
+        <member name="M:DPUruNet.Reader.Reset">
+            <summary>
+            Resets the reader.
+            
+            This function performs a hardware reset on the reader.  Hardware resets are typically needed only 
+            after a hardware problem (e.g., the reader is unplugged or receives an electrostatic shock). 
+            This function blocks until the reset is complete.
+            </summary>
+            <returns>
+            DPFPDD_SUCCESS: Reset succeeded;
+            DPFPDD_E_FAILURE: Unexpected failure;
+            DPFPDD_E_INVALID_DEVICE: Invalid reader;
+            DPFPDD_E_DEVICE_BUSY: Another operation is in progress;
+            DPFPDD_E_DEVICE_FAILURE: Failed to reset, reader is not functioning properly.
+            </returns>
+        </member>
+        <member name="P:DPUruNet.Reader.Description">
+            <summary>
+            Complete information about the reader hardware.
+            </summary>
+        </member>
+        <member name="P:DPUruNet.Reader.Status">
+            <summary>
+            Container class to hold reader status.
+            </summary>
+        </member>
+        <member name="P:DPUruNet.Reader.Capabilities">
+            <summary>
+            Contains information about reader capabilities (i.e., can capture, can stream, ...)
+            </summary>
+        </member>
+        <member name="E:DPUruNet.Reader.On_Captured">
+            <summary>
+            Callback event triggered when a CaptureResult is available.
+            </summary>
+        </member>
+        <member name="T:DPUruNet.Reader.ReaderDescription">
+            <summary>
+            Contains complete information about reader hardware.
+            </summary>
+        </member>
+        <member name="M:DPUruNet.Reader.ReaderDescription.#ctor(System.String,System.String,DPUruNet.Constants.ReaderModality,DPUruNet.Constants.ReaderTechnology,DPUruNet.Reader.ReaderDescription.ReaderId,DPUruNet.Reader.ReaderDescription.ReaderVersion)">
+            <summary>
+            Constructs a container class to hold complete information about reader hardware.
+            </summary>
+            <param name="serialNumber">The reader's GUID</param>
+            <param name="name">Unique name of the reader</param>
+            <param name="modality">Reader modality</param>
+            <param name="technology">Reader technology</param>
+            <param name="id">Reader id product and vendor information</param>
+            <param name="version">Reader version details</param>
+        </member>
+        <member name="P:DPUruNet.Reader.ReaderDescription.SerialNumber">
+            <summary>
+            The reader's GUID.  Can be used to uniquely identify the reader externally.
+            </summary>
+        </member>
+        <member name="P:DPUruNet.Reader.ReaderDescription.Name">
+            <summary>
+            Unique name of the reader.
+            </summary>
+        </member>
+        <member name="P:DPUruNet.Reader.ReaderDescription.Modality">
+            <summary>
+            Reader modality.
+            </summary>
+        </member>
+        <member name="P:DPUruNet.Reader.ReaderDescription.Technology">
+            <summary>
+            Reader technology.
+            </summary>
+        </member>
+        <member name="P:DPUruNet.Reader.ReaderDescription.Id">
+            <summary>
+            Constructs a container class to hold reader id details.
+            </summary>
+        </member>
+        <member name="P:DPUruNet.Reader.ReaderDescription.Version">
+            <summary>
+            Contains firmware and hardware versions.
+            </summary>
+        </member>
+        <member name="T:DPUruNet.Reader.ReaderDescription.ReaderId">
+            <summary>
+            Reader id product and vendor information.
+            </summary>
+        </member>
+        <member name="M:DPUruNet.Reader.ReaderDescription.ReaderId.#ctor(System.String,System.Int32,System.String,System.Int32)">
+            <summary>
+            Constructs a container class to hold reader id details.
+            </summary>
+            <param name="vendorName">Vendor name</param>
+            <param name="vendorId">Vendor id</param>
+            <param name="productName">Product name</param>
+            <param name="productId">Product id</param>
+        </member>
+        <member name="P:DPUruNet.Reader.ReaderDescription.ReaderId.VendorName">
+            <summary>
+            Vendor name.
+            </summary>
+        </member>
+        <member name="P:DPUruNet.Reader.ReaderDescription.ReaderId.VendorId">
+            <summary>
+            Vendor id.
+            </summary>
+        </member>
+        <member name="P:DPUruNet.Reader.ReaderDescription.ReaderId.ProductName">
+            <summary>
+            Product name.
+            </summary>
+        </member>
+        <member name="P:DPUruNet.Reader.ReaderDescription.ReaderId.ProductId">
+            <summary>
+            Product id.
+            </summary>
+        </member>
+        <member name="T:DPUruNet.Reader.ReaderDescription.ReaderVersion">
+            <summary>
+            Contains firmware and hardware versions.
+            </summary>            
+        </member>
+        <member name="M:DPUruNet.Reader.ReaderDescription.ReaderVersion.#ctor(System.String,System.String)">
+            <summary>
+            Constructs a container for firmware and hardware versions.
+            </summary>
+            <param name="firmwareVersion">Firmware version</param>
+            <param name="hardwareVersion">Hardware version</param>
+        </member>
+        <member name="P:DPUruNet.Reader.ReaderDescription.ReaderVersion.FirmwareVersion">
+            <summary>
+            Firmware version, including major, minor, and revision numbers.
+            </summary>
+        </member>
+        <member name="P:DPUruNet.Reader.ReaderDescription.ReaderVersion.HardwareVersion">
+            <summary>
+            Hardware version, including major, minor, and revision numbers.
+            </summary>
+        </member>
+        <member name="T:DPUruNet.Reader.ReaderStatus">
+            <summary>
+            Container class describing status of the reader.
+            </summary>
+        </member>
+        <member name="M:DPUruNet.Reader.ReaderStatus.#ctor(DPUruNet.Constants.ReaderStatuses,System.Int32,System.String)">
+            <summary>
+            Constructs a container class to hold reader status.
+            </summary>
+            <param name="status">Status value of the reader</param>
+            <param name="fingerDetected">Whether or not a finger is detected.  0 = no finger, 1 = finger detected</param>
+            <param name="vendorData">Vendor-specific data</param>
+        </member>
+        <member name="P:DPUruNet.Reader.ReaderStatus.Status">
+            <summary>
+            Constants describing status of the reader.
+            </summary>
+        </member>
+        <member name="P:DPUruNet.Reader.ReaderStatus.FingerDetected">
+            <summary>
+            Flag to show if reader detects a finger.
+            </summary>
+        </member>
+        <member name="P:DPUruNet.Reader.ReaderStatus.VendorData">
+            <summary>
+            Additional vendor-specific data which may be passed by the driver.
+            </summary>
+        </member>
+        <member name="T:DPUruNet.Reader.ReaderCapabilities">
+            <summary>
+            Contains information about reader capabilities (i.e., can capture, can stream, ...)
+            </summary>
+        </member>
+        <member name="M:DPUruNet.Reader.ReaderCapabilities.#ctor(System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Int32[],System.Int32)">
+            <summary>
+            Constructs a class to contain information about reader capabilities (i.e., can capture, can stream, ...)
+            </summary>
+            <param name="canCapture">Flag: reader can capture images</param>
+            <param name="canStream">Flag: reader can stream images</param>
+            <param name="extractFeatures">Flag: reader can extract features from captured image and return fingerprint features data</param>
+            <param name="canMatch">Flag: reader can perform match one-to-one</param>
+            <param name="canIdentify">Flag: reader can perform match one-to-many</param>
+            <param name="hasFingerprintStorage">Flag: reader has storage for fingerprint features data</param>
+            <param name="hasPowerManagement">Flag: power mode of the reader can be controlled</param>
+            <param name="hasCalibration">Flag: reader can be calibrated</param>
+            <param name="PIVCompliant">Flag: can produce PIV compliant images</param>
+            <param name="resolutions">Available resolutions</param>
+            <param name="indicatorType">Type of indicator</param>
+        </member>
+        <member name="P:DPUruNet.Reader.ReaderCapabilities.CanCapture">
+            <summary>
+            Flag: reader can capture images.
+            </summary>
+        </member>
+        <member name="P:DPUruNet.Reader.ReaderCapabilities.CanStream">
+            <summary>
+            Flag: reader can stream images.
+            </summary>
+        </member>
+        <member name="P:DPUruNet.Reader.ReaderCapabilities.ExtractFeatures">
+            <summary>
+            Flag: reader can extract features from captured image and return fingerprint features data.
+            </summary>
+        </member>
+        <member name="P:DPUruNet.Reader.ReaderCapabilities.CanMatch">
+            <summary>
+            Flag: reader can perform match one-to-one.
+            </summary>
+        </member>
+        <member name="P:DPUruNet.Reader.ReaderCapabilities.CanIdentify">
+            <summary>
+            Flag: reader can perform match one-to-many.
+            </summary>
+        </member>
+        <member name="P:DPUruNet.Reader.ReaderCapabilities.HasFingerprintStorage">
+            <summary>
+            Flag: reader has storage for fingerprint features data.
+            </summary>
+        </member>
+        <member name="P:DPUruNet.Reader.ReaderCapabilities.HasPowerManagement">
+            <summary>
+            Flag: power mode of the reader can be controlled.
+            </summary>
+        </member>
+        <member name="P:DPUruNet.Reader.ReaderCapabilities.HasCalibration">
+            <summary>
+            Flag: reader can be calibrated.
+            </summary>
+        </member>
+        <member name="P:DPUruNet.Reader.ReaderCapabilities.PIVCompliant">
+            <summary>
+            Flag: can produce PIV compliant images.
+            </summary>
+        </member>
+        <member name="P:DPUruNet.Reader.ReaderCapabilities.Resolutions">
+            <summary>
+            Available resolutions.
+            </summary>
+        </member>
+        <member name="P:DPUruNet.Reader.ReaderCapabilities.IndicatorType">
+            <summary>
+            Indicator Type.
+            </summary>
+        </member>
+        <member name="T:DPUruNet.Reader.CaptureCallback">
+            <summary>
+            Delegate which returns a CaptureResult.
+            </summary>
+            <param name="result"></param>
+        </member>
+        <member name="T:DPUruNet.ReaderCollection">
+            <summary>
+            An enumerable, disposable singleton collection of reader objects, representing all readers attached to the system..  
+            </summary>
+        </member>
+        <member name="M:DPUruNet.ReaderCollection.#ctor">
+            <summary>
+            Constructor to create the list of reader objects and initalize reader context.
+            </summary>
+        </member>
+        <member name="M:DPUruNet.ReaderCollection.GetReaders">
+            <summary>
+            This method searches available readers and refreshes information about them.
+            </summary>
+        </member>
+        <member name="M:DPUruNet.ReaderCollection.Refresh(DPUruNet.NativeMethods.DPFPDD_DEV_INFO[])">
+            <summary>
+            Private method to refresh the current list of readers.
+            </summary>
+        </member>
+        <member name="M:DPUruNet.ReaderCollection.Dispose">
+            <summary>
+            This method destroys reader collection and releases resources associated with the readers.
+            </summary>
+        </member>
+        <member name="M:DPUruNet.ReaderCollection.DecodeUTF8(System.Byte[])">
+            <summary>
+            Private decoder for UTF8 strings.
+            </summary>
+            <param name="value"></param>
+            <returns></returns>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:DPUruNet.ReaderCollection.GetEnumerator" -->
+        <member name="M:DPUruNet.ReaderCollection.System#Collections#IEnumerable#GetEnumerator">
+            <summary>
+            IEnumerable.GetEnumerator().
+            </summary>
+            <returns></returns>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:DPUruNet.ReaderCollection.System#Collections#Generic#IEnumerable{DPUruNet#Reader}#GetEnumerator" -->
+        <member name="P:DPUruNet.ReaderCollection.Item(System.Int32)">
+            <summary>
+            Returns the Reader at a specified index in the ReaderCollection.
+            </summary>
+            <param name="index">index of Reader</param>
+            <returns></returns>
+        </member>
+        <member name="P:DPUruNet.ReaderCollection.Count">
+            <summary>
+            Reader count.
+            </summary>
+        </member>
+        <member name="T:DPUruNet.CaptureResult">
+            <summary>
+            Contains capture result code, quality, score, and Fid.
+            </summary>
+        </member>
+        <member name="M:DPUruNet.CaptureResult.#ctor(DPUruNet.Constants.ResultCode,DPUruNet.Constants.CaptureQuality,System.Int32,DPUruNet.Fid)">
+            <summary>
+            Constructor to create a container class for the result of a capture or streaming operation.
+            </summary>
+            <param name="result">result code</param>
+            <param name="quality">image quality</param>
+            <param name="score">image score</param>
+            <param name="fid">captured Fid</param>
+        </member>
+        <member name="P:DPUruNet.CaptureResult.Quality">
+            <summary>
+            Image quality.
+            </summary>
+        </member>
+        <member name="P:DPUruNet.CaptureResult.Score">
+            <summary>
+            Image score.
+            </summary>
+        </member>
+        <member name="T:DPUruNet.ReaderHandle">
+            <summary>
+            Level 0 type for window station handles.
+            </summary>
+        </member>
+    </members>
+</doc>
