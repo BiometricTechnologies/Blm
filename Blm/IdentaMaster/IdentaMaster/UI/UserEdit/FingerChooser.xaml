@@ -1,0 +1,64 @@
+﻿<UserControl x:Class="IdentaZone.IdentaMaster.UserEdit.FingerChooser"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             Height="290" Width="590">
+    <UserControl.Resources>
+        <Style x:Key="Fingers" TargetType="Image">
+            <Setter Property="Grid.Row" Value="1"/>
+            <Setter Property="Visibility" Value="Hidden"/>
+        </Style>
+    </UserControl.Resources>
+    <Grid>
+        <Image Panel.ZIndex="-1" Source="pack://application:,,,/images/empty_hands.png" HorizontalAlignment="Stretch" VerticalAlignment="Bottom"/>
+        <Grid Panel.ZIndex="0">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition Height="240"/>
+            </Grid.RowDefinitions>
+            <Image  Style="{StaticResource Fingers}" x:Name="i4" Source="pack://application:,,,/images/fingers/4.png" Margin="0,104,368,90"/>
+            <Image  Style="{StaticResource Fingers}" x:Name="i3" Source="pack://application:,,,/images/fingers/3.png" Margin="103,56,437,114" Width="50" />
+            <Image  Style="{StaticResource Fingers}" x:Name="i2" Source="pack://application:,,,/images/fingers/2.png" Margin="32.5,30,315.5,132" />
+            <Image  Style="{StaticResource Fingers}" x:Name="i1" Source="pack://application:,,,/images/fingers/1.png" Margin="66,30,282,138"/>
+            <Image  Style="{StaticResource Fingers}" x:Name="i0" Source="pack://application:,,,/images/fingers/0.png" Margin="126,97,210,56"/>
+            <Image  Style="{StaticResource Fingers}" x:Name="i9" Source="pack://application:,,,/images/fingers/9.png" Margin="372,103,11,90" />
+            <Image  Style="{StaticResource Fingers}" x:Name="i8" Source="pack://application:,,,/images/fingers/8.png" Margin="342,55,16,114" />
+            <Image  Style="{StaticResource Fingers}" x:Name="i7" Source="pack://application:,,,/images/fingers/7.png" Margin="309,29,34,131" />
+            <Image  Style="{StaticResource Fingers}" x:Name="i6" Source="pack://application:,,,/images/fingers/6.png" Margin="281.5,30,74,138"/>
+            <Image  Style="{StaticResource Fingers}" x:Name="i5" Source="pack://application:,,,/images/fingers/5.png" Margin="216.5,98,141,57" />
+            <Image Style="{StaticResource Fingers}" x:Name="p4" Source="pack://application:,,,/images/fingers/PrintImage.png" Margin="-192,94,226,122"  />
+            <Image Style="{StaticResource Fingers}" x:Name="p3" Source="pack://application:,,,/images/fingers/PrintImage.png" Margin="-168,52,202,164"  />
+            <Image Style="{StaticResource Fingers}" x:Name="p2" Source="pack://application:,,,/images/fingers/PrintImage.png" Margin="-138,24,172,192"  />
+            <Image Style="{StaticResource Fingers}" x:Name="p1" Source="pack://application:,,,/images/fingers/PrintImage.png" Margin="-98,22,132,194"  />
+            <Image Style="{StaticResource Fingers}" x:Name="p0" Source="pack://application:,,,/images/fingers/PrintImage.png" Margin="-8,92,42,124"  />
+            <Image Style="{StaticResource Fingers}" x:Name="p9" Source="pack://application:,,,/images/fingers/PrintImage.png" Margin="216,98,-182,118"  />
+            <Image Style="{StaticResource Fingers}" x:Name="p8" Source="pack://application:,,,/images/fingers/PrintImage.png" Margin="198,48,-164,168"  />
+            <Image Style="{StaticResource Fingers}" x:Name="p7" Source="pack://application:,,,/images/fingers/PrintImage.png" Margin="166,29,-132,187"/>
+            <Image Style="{StaticResource Fingers}" x:Name="p6" Source="pack://application:,,,/images/fingers/PrintImage.png" Margin="129,22,-95,194"/>
+            <Image Style="{StaticResource Fingers}" x:Name="p5" Source="pack://application:,,,/images/fingers/PrintImage.png" Margin="35,91,-1,125"/>
+            <Canvas Grid.Row="1" Panel.ZIndex="1" x:Name="Layer_3" Width="600" Height="250" Canvas.Left="0" Canvas.Top="0" >
+                <Path Fill="Transparent" x:Name="f4" MouseDown="FingerMouseDown" MouseEnter="FingerMouseEnter" MouseLeave="FingerMouseLeave"  Width="52.333" Height="52" Canvas.Left="85.667" Canvas.Top="97.333" Stretch="Fill" StrokeLineJoin="Round" Stroke="Transparent" Data="F1 M 58.0081,70.1458C 43.5081,60.8125 1.67482,21.8125 0.674805,10.8125C -0.325211,-0.1875 3.23036,4.14583 4.50813,0.8125C 8.1748,1.3125 11.5081,-1.02083 15.5081,2.3125C 20.5081,4.97917 56.6748,35.8125 61.1748,39.3125C 65.6748,42.8125 72.5081,49.8125 74.3414,56.6458C 76.1748,63.4792 73.897,64.868 73.6748,68.9792C 71.3414,70.6458 69.1748,73.1458 66.6748,73.9792C 64.1748,74.8125 57.7581,69.9792 58.0081,70.1458 Z " />
+                <Path Fill="Transparent"  x:Name="f3" MouseDown="FingerMouseDown" MouseEnter="FingerMouseEnter" MouseLeave="FingerMouseLeave" Width="48.5" Height="72.5" Canvas.Left="103.25" Canvas.Top="51" Stretch="Fill" StrokeLineJoin="Round" Stroke="Transparent" Data="F1 M 0.5,22.25L 53.75,110.25L 62.5,113.25L 73.25,102.75L 73.75,88.5L 19.5,6.99998L 11.25,0.499977L 2.74998,4.99998L 0.5,22.25 Z "/>
+                <Path Fill="Transparent"  x:Name="f2" MouseDown="FingerMouseDown" MouseEnter="FingerMouseEnter" MouseLeave="FingerMouseLeave" Width="40.167" Height="79.167" Canvas.Left="136.833" Canvas.Top="25.167" Stretch="Fill" StrokeLineJoin="Round" Stroke="Transparent" Data="F1 M 58.8333,123.833C 53.9445,123.167 50.5,123.5 44.1667,121.833C 37.8333,120.167 15.5,52.9444 1.16667,18.5L 0.5,5.83332L 7.5,0.50001L 17.5,0.833323L 26.8333,11.8333C 40.1667,44.0555 64.8333,102.167 66.8333,108.5C 68.8333,114.833 61.5,118.722 58.8333,123.833 Z " />
+                <Path Fill="Transparent"  x:Name="f1" MouseDown="FingerMouseDown" MouseEnter="FingerMouseEnter" MouseLeave="FingerMouseLeave" Width="37.334" Height="78.458" Canvas.Left="170.5" Canvas.Top="25" Stretch="Fill" StrokeLineJoin="Round" Stroke="Transparent" Data="F1 M 29.5,114L 22,106.5L 0.5,19L 1.5,3.49996L 8,0.49999L 19,3.49996L 47.5,102.5L 42,112L 29.5,114 Z " RenderTransformOrigin="0.5,0.5">
+                    <Path.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform/>
+                            <SkewTransform/>
+                            <RotateTransform Angle="3.018"/>
+                            <TranslateTransform/>
+                        </TransformGroup>
+                    </Path.RenderTransform>
+                </Path>
+                <Path Fill="Transparent"  x:Name="f0" MouseDown="FingerMouseDown" MouseEnter="FingerMouseEnter" MouseLeave="FingerMouseLeave" Width="53.167" Height="86.5" Canvas.Left="231" Canvas.Top="97" Stretch="Fill" StrokeLineJoin="Round" Stroke="Transparent" Data="F1 M 2.66672,68.0527C 2.66669,68.0527 7.66675,57.5527 14.1667,54.5527C 20.6667,51.5527 31.6667,26.0527 31.6667,26.0527C 31.6667,26.0527 61.1667,-6.94728 73.1667,2.05275C 85.1667,11.0527 79.1667,6.55272 82.6667,12.0527C 86.1667,17.5527 58.1667,51.0527 58.1667,51.0527C 58.1667,51.0527 45.1667,69.5527 47.6667,72.0527C 50.1666,74.5527 48.8334,84.7194 49.1667,90.0527C 49.5,95.3861 39.8334,117.386 39.1667,119.053C 38.5,120.719 30.5001,139.719 25.5,137.719C 20.5,135.719 19.5001,139.053 16.1667,129.053C 12.8333,119.053 0.5,76.7194 0.5,76.7194L 2.66672,68.0527 Z "/>
+                <Path Fill="Transparent"  x:Name="f5" MouseDown="FingerMouseDown" MouseEnter="FingerMouseEnter" MouseLeave="FingerMouseLeave" Width="53.167" Height="86.5" Canvas.Left="306.75" Canvas.Top="95" Stretch="Fill" StrokeLineJoin="Round" Stroke="Transparent" Data="F1 M 77.0924,68.5643C 77.0924,68.5643 72.3053,57.9848 66.0822,54.9621C 59.8592,51.9393 49.3277,26.2463 49.3277,26.2463C 49.3277,26.2463 21.0842,-7.00368 9.59537,2.0645C -1.89349,11.1326 3.85086,6.59856 0.5,12.1402C -2.85089,17.6819 23.9565,51.4356 23.9565,51.4356C 23.9565,51.4356 36.4027,70.0757 34.0092,72.5946C 31.6158,75.1135 32.8922,85.3572 32.5731,90.7309C 32.2539,96.1046 41.5088,118.271 42.1471,119.951C 42.7854,121.63 50.4446,140.774 55.2317,138.759C 60.0187,136.743 60.976,140.102 64.1674,130.026C 67.3588,119.951 79.1668,77.2966 79.1668,77.2966L 77.0924,68.5643 Z "/>
+                <Path Fill="Transparent"  x:Name="f6" MouseDown="FingerMouseDown" MouseEnter="FingerMouseEnter" MouseLeave="FingerMouseLeave" Width="31.5" Height="73.916" Canvas.Left="382.5" Canvas.Top="24.292" Stretch="Fill" StrokeLineJoin="Round" Stroke="Transparent" Data="F1 M 20.1595,114L 28.351,106.5L 51.8332,18.9999L 50.741,3.49995L 43.6417,0.499979L 31.6276,3.49995L 0.5,102.5L 6.50708,112L 20.1595,114 Z "/>
+                <Path Fill="Transparent"  x:Name="f7" MouseDown="FingerMouseDown" MouseEnter="FingerMouseEnter" MouseLeave="FingerMouseLeave" Width="46.5" Height="81.458" Canvas.Left="412" Canvas.Top="23.75" Stretch="Fill" StrokeLineJoin="Round" Stroke="Transparent" Data="F1 M 8.36066,125.5C 13.1644,124.824 16.5488,125.162 22.7719,123.473C 28.9949,121.784 50.9393,53.6531 65.0231,18.7432L 65.6782,5.9054L 58.8001,0.5L 48.9742,0.83783L 39.8035,11.9865C 26.7023,44.6441 2.46515,103.541 0.5,109.959C -1.46521,116.378 5.74036,120.32 8.36066,125.5 Z "/>
+                <Path Fill="Transparent"  x:Name="f8" MouseDown="FingerMouseDown" MouseEnter="FingerMouseEnter" MouseLeave="FingerMouseLeave" Width="46.667" Height="72.5" Canvas.Left="434.666" Canvas.Top="53.25" Stretch="Fill" StrokeLineJoin="Round" Stroke="Transparent" Data="F1 M 75.1667,22.684L 20.8868,112.44L 11.9677,115.5L 1.0097,104.79L 0.5,90.2561L 55.7993,7.12969L 64.2089,0.499989L 72.8733,5.0898L 75.1667,22.684 Z " />
+                <Path Fill="Transparent"  x:Name="f9" MouseDown="FingerMouseDown" MouseEnter="FingerMouseEnter" MouseLeave="FingerMouseLeave" Width="52.917" Height="52.5" Canvas.Left="452" Canvas.Top="97.5" Stretch="Fill" StrokeLineJoin="Round" Stroke="Transparent" Data="F1 M 1.01575,59.625C 1.01563,59.625 11.3491,40.625 11.3491,40.9583C 11.3489,41.2917 32.349,25.625 32.349,25.625L 46.6823,11.9583L 63.349,0.958344C 67.0156,2.18057 70.0156,-2.70831 74.349,4.62502C 78.6823,11.9583 71.9045,13.9583 70.6823,18.625L 20.0156,66.625L 9.68231,73.2917C 9.68231,73.2917 2.34906,75.2917 1.01563,66.9583C -0.317688,58.625 1.349,58.9583 1.01575,59.625 Z "/>
+            </Canvas>
+        </Grid>
+    </Grid>
+</UserControl>

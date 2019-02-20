@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Include>
+  <?define ProductName="IdentaMaster"?>
+  <!--Take version from BLM_ADMIN-->
+  <?define ProductCode="*"?>
+  <?define UpgradeCode="fc964d79-dfbe-457a-9dc9-3abbb6f1fd3e"?>
+  <?define Manufacturer="IdentaZone Inc"?>
+  <?define IMDir="$(var.SolutionDir)IdentaMaster\IdentaMaster\bin\Release_$(var.Platform)"?>
+  <?define UICDir="$(var.SolutionDir)IdentaMaster\IdentaMaster\bin\Release_$(var.Platform)"?>
+  <?if $(var.Platform)="x86"?>
+    <?define SystemPlatform="SystemFolder"?>
+    <?define ProgramFilesPlatform="ProgramFilesFolder"?>
+  <?else?>
+    <?define SystemPlatform="System64Folder"?>
+    <?define ProgramFilesPlatform="ProgramFiles64Folder"?>
+  <?endif?>
+</Include>

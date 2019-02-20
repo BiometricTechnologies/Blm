@@ -1,0 +1,47 @@
+﻿<UserControl x:Class="IdentaZone.IdentaMaster.Activate"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             Height="180" Width="300">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/UI/templates/UserEditStyles.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid Style="{StaticResource UEExternalGrid}">
+        <Grid.RowDefinitions >
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="65"/>
+        </Grid.RowDefinitions>
+        <Grid Style="{StaticResource UEInternalGrid}">
+            <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                <Label Grid.Row="0"  HorizontalAlignment="Center">Would you like to activate User</Label>
+                <Label Grid.Row="1" Foreground="#ef7f1a" FontSize="14" FontWeight="Bold"  VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <TextBlock Name="Fullname" Text="Username"/>
+                </Label>
+            </StackPanel>
+        </Grid>
+        <Grid Grid.Row="1" >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="0" Click="ProceedClick" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}">
+                <StackPanel Orientation="Horizontal">
+                    <Image Height="50" Source="pack://application:,,,/images/buttons/green.png" Margin="0,0,10,0"/>
+                    <Label Style="{StaticResource UEButtonLabel}" VerticalAlignment="Center">YES</Label>
+                </StackPanel>
+            </Button>
+            <Button x:Name="clic" Grid.Column="1" Click="CancelClick" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}">
+                <StackPanel Orientation="Horizontal">
+                    <Image Height="50" Source="pack://application:,,,/images/buttons/red.png" Margin="0,0,10,0"/>
+                    <Label Style="{StaticResource UEButtonLabel}"  VerticalAlignment="Center">NO</Label>
+                </StackPanel>
+            </Button>
+        </Grid>
+    </Grid>
+</UserControl>

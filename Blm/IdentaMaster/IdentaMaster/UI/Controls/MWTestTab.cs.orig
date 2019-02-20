@@ -1,0 +1,590 @@
+using System;
+using System.Collections.Generic;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Media;
+using System.Windows.Threading;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Windows.Navigation;
+using System.Diagnostics;
+using IMPlugin;
+using System.Security.Permissions;
+using System.ComponentModel;
+using System.Threading;
+
+namespace IdentaMaster
+{
+
+    /// <summary>
+    /// Interaction logic for MainWindow.xaml
+    /// </summary>
+
+    public partial class MainWindow : Window
+    {
+        /// Some info about usage of Invoke, InvokeLater and BackgroundWorker
+        /// BW is used to most complicated job - refresh. It could freeze, so better do it in separate thread
+        /// InvokeLater must be used where invokation needs to use Ambassador class, or you get deadlock
+        /// Invoke is used for simple GUI updating.
+
+
+        // Delegates to be used in placking jobs onto the Dispatcher.
+        private delegate void refreshFetcher();
+        private delegate void biometricsFetcher(Object sender, FingerImage image);
+
+        // Timer for fingerImageBoxClearing
+        int imageReset;
+        // Timer for reseting textBox
+        int textReset;
+        // how frequent is timer checked
+        const int RESETER_TIMER_PERIOD_MS = 100;
+        // How long will Image last on page
+        const int RESETER_IMAGE_LIFETIME_MS = 2000;
+        const int RESETER_TEXT_LIFETIME_MS = 2000;
+        DispatcherTimer imageReseter = null;
+
+        FingerDisplay checkFinger = null;
+        RadioButton currentTestDevice = null;
+
+        const String unactiveText = "Please, register and activate the program";
+        const String loadingText = "Please, wait while license is validated";
+        const String baseText = "You have installed and activated ";
+
+        private void UpdateTestTab()
+        {
+
+
+            switch (Licenser.State)
+            {
+                case Licenser.STATE.LOADING:
+                    TestDeviceNum.Foreground = new SolidColorBrush(Colors.White);
+                    TestDeviceNum.Content = loadingText;
+                    break;
+                case Licenser.STATE.ACTIVATED:
+                    TestDeviceNum.Foreground = new SolidColorBrush(Colors.White);
+                    int providersCount = pluginManager.Plugins.Count();
+                    // Generate provider info text
+                    switch (providersCount)
+                    {
+                        case 0:
+                            TestDeviceNum.Content = baseText + "none biometric providers";
+                            break;
+                        case 1:
+                            TestDeviceNum.Content = baseText + "one biometric provider";
+                            break;
+                        default:
+                            TestDeviceNum.Content = baseText + Auxiliary.NumberToText(providersCount).ToLower() + "biometric providers";
+                            break;
+                    }
+                    break;
+                case Licenser.STATE.NOT_REGISTERED:
+                    TestDeviceNum.Foreground = new SolidColorBrush(Colors.Red);
+                    TestDeviceNum.Content = unactiveText;
+                    break;
+            }
+
+            BuildTestUserList();
+            foreach (var radiobutton in TestDevicePanel.Children.OfType<RadioButton>())
+            {
+                if (radiobutton.IsChecked == true)
+                {
+                    TestPageDeviceSelected(radiobutton, null);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Initializes the test tab.
+        /// </summary>
+        private void InitTestTab()
+        {
+            // Image Reseter
+            imageReseter = new System.Windows.Threading.DispatcherTimer();
+            imageReseter.Tick += new EventHandler(imageClearTimerHandler);
+            imageReseter.Interval = new TimeSpan(0, 0, 0, 0, RESETER_TIMER_PERIOD_MS);
+            imageReseter.Start();
+
+
+            // populate device ctrl tab
+            foreach (var deviceCtrl in pluginManager.DeviceControls)
+            {
+                deviceCtrl.EnumerateDevices();
+                RadioButton radioButton = new RadioButton();
+                radioButton.Checked += TestPageDeviceSelected;
+                radioButton.Unchecked += TestPageDeviceDeselected;
+                if (deviceCtrl.ActiveDevices.Count == 0)
+                {
+                    StackPanel panel = new StackPanel();
+
+                    radioButton.Content = deviceCtrl.ToString();
+                    radioButton.IsChecked = false;
+                    radioButton.IsEnabled = true;
+                    radioButton.Style = Resources["IZRadioButton"] as Style;
+
+                    TestDevicePanel.Children.Add(radioButton);
+                }
+                else
+                {
+                    radioButton.Content = deviceCtrl.ActiveDevices[0];
+                    radioButton.IsChecked = false;
+                    radioButton.Style = Resources["IZRadioButton"] as Style;
+                    TestDevicePanel.Children.Add(radioButton);
+                }
+            }
+
+            // setup background worker for refresh
+            refresher.DoWork += refreshOneDevice;
+        }
+
+
+        /// <summary>
+        /// Handles the RequestNavigate event of the Hyperlink control.
+        /// </summary>
+        /// <param name="Sender">The source of the event.</param>
+        /// <param name="e">The <see cref="RequestNavigateEventArgs"/> instance containing the event data.</param>
+        private void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e)
+        {
+            Process.Start(new ProcessStartInfo(e.Uri.AbsoluteUri));
+            e.Handled = true;
+        }
+
+
+        /// <summary>
+        /// Send current GUI function to "sleep", allowing GUI Dispatcher to refresh GUI
+        /// </summary>
+        [SecurityPermissionAttribute(SecurityAction.Demand, Flags = SecurityPermissionFlag.UnmanagedCode)]
+        public void DoEvents()
+        {
+            try
+            {
+                DispatcherFrame frame = new DispatcherFrame();
+                this.Dispatcher.Invoke(DispatcherPriority.Background,
+                    new DispatcherOperationCallback(ExitFrame), frame);
+                Dispatcher.PushFrame(frame);
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Info(ex);
+            }
+        }
+
+        public object ExitFrame(object f)
+        {
+            ((DispatcherFrame)f).Continue = false;
+            return null;
+        }
+
+        private BackgroundWorker refresher = new BackgroundWorker();
+        /// <summary>
+        /// Refreshes the one device.
+        /// </summary>
+        /// <param name="Sender">The Sender.</param>
+        /// <param name="e">The <see cref="DoWorkEventArgs"/> instance containing the event data.</param>
+        private void refreshOneDevice(object sender, DoWorkEventArgs e)
+        {
+            (e.Argument as IDeviceControl).EnumerateDevices();
+        }
+
+        /// <summary>
+        /// Refreshes the test page.
+        /// </summary>
+        private void RefreshTestPage()
+        {
+            foreach (var deviceCtrl in pluginManager.DeviceControls)
+            {
+                var currentRadioButtons = TestDevicePanel.Children.OfType<RadioButton>().
+                    Where(rb => rb.Content.ToString() == deviceCtrl.ToString());
+
+                // Block all RB
+                foreach (var radioButton in currentRadioButtons)
+                {
+                    radioButton.IsEnabled = false;
+                }
+
+                // Run Refresh in separate worker thread
+                refresher.RunWorkerAsync(deviceCtrl);
+                while (refresher.IsBusy)
+                {
+                    DoEvents();
+                }
+
+                // If no device is online
+                if (deviceCtrl.ActiveDevices.Count == 0)
+                {
+                    foreach (var radioButton in currentRadioButtons)
+                    {
+                        radioButton.Content = deviceCtrl.ToString();
+                    }
+                }
+                // If some devices are online
+                else
+                {
+                    foreach (var radioButton in currentRadioButtons)
+                    {
+                        radioButton.Content = deviceCtrl.ActiveDevices[0];
+                        if (radioButton.IsChecked == true)
+                        {
+                            TestPageDeviceSelected(radioButton, null);
+                        }
+                    }
+                }
+
+                // Unblock RB
+                foreach (var radioButton in currentRadioButtons)
+                {
+                    radioButton.IsEnabled = true;
+                }
+            }
+            TestRefreshButton.IsEnabled = true;
+        }
+
+        void TestPageDeviceSelected(object sender, RoutedEventArgs e)
+        {
+            RadioButton radioButton = (sender as RadioButton);
+            try
+            {
+                // If Provider has an active device
+                if (radioButton.Content is IFingerDevice)
+                {
+                    currentTestDevice = (sender as RadioButton);
+                    currentTestDevice.IsEnabled = false;
+                    IFingerDevice device = (sender as RadioButton).Content as IFingerDevice;
+
+                    TestScannerPage.Children.Clear();
+                    checkFinger = new FingerDisplay();
+                    TestScannerPage.Children.Add(checkFinger);
+
+                    checkFinger.SetText("Please, touch the scanner");
+                    Ambassador.SetCallback(DispatchMessage);
+                    device.Dispatch(COMMAND.LIVECAPTURE_START);
+                    imageReseter.Start();
+                }
+                else
+                {
+                    Ambassador.ClearCallback();
+                    if (checkFinger != null)
+                    {
+                        TestScannerPage.Children.Clear();
+                        checkFinger = null;
+                    }
+                    checkFinger = new FingerDisplay(Properties.Resources.no_device);
+                    TestScannerPage.Children.Add(checkFinger);
+                    checkFinger.SetText("Connect device and press refresh");
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ex);
+            }
+        }
+
+        private void DispatchMessage(Message msg)
+        {
+            if (msg is MBiometricsLiveCaptured)
+            {
+                BiometricsCaptured(msg.Sender, (msg as MBiometricsLiveCaptured).Image);
+            }
+            else if (msg is MShowText)
+            {
+                MessageSend(msg.Sender, (msg as MShowText).Message);
+            }
+            else if (msg is MSignal)
+            {
+                SignalCaptured(msg.Sender, (msg as MSignal).Signal);
+            }
+        }
+
+        private void TestPageDeviceDeselected(object sender, RoutedEventArgs e)
+        {
+            RadioButton radioButton = (sender as RadioButton);
+
+            try
+            {
+                // If Provider has an active device
+                if (radioButton.Content is IFingerDevice)
+                {
+                    IFingerDevice device = (sender as RadioButton).Content as IFingerDevice;
+                    Ambassador.ClearCallback();
+
+                    device.Dispatch(COMMAND.LIVECAPTURE_STOP);
+                    (sender as RadioButton).IsEnabled = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Warn(ex);
+            }
+        }
+
+        object lockAPI = new object();
+        void ProcessImage(Object sender, FingerImage image)
+        {
+            try
+            {
+                // Do not process signals from another devices
+                if (sender == currentTestDevice.Content)
+                {
+                    currentTestDevice.IsEnabled = true;
+
+                    if (image != null)
+                    {
+                        FingerPicture pic = (sender as IFingerDevice).MakePicture(image);
+                        checkFinger.ShowImage(pic.Image, pic.Width, pic.Height);
+                        imageClearTimerStart();
+                        if (Monitor.TryEnter(lockAPI, 0))
+                        {
+                            try
+                            {
+                                Dictionary<FingerTemplate, String> currentTemplates = templates[currentTestDevice.Content.GetType().ToString()];
+                                if (currentTemplates != null)
+                                {
+                                    Task.Factory.StartNew(() => MatchTask((sender as IFingerDevice), image, currentTemplates));
+                                }
+                            }
+                            catch (Exception e)
+                            {
+                                Logger.Log.Error(e);
+                                Monitor.Exit(lockAPI);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.Log.Info(e);
+            }
+        }
+
+        private void MatchTask(IFingerDevice fingerDevice, FingerImage image, Dictionary<FingerTemplate, string> currentTemplates)
+        {
+            try
+            {
+                var candidates = currentTemplates.Keys.ToArray();
+                int result = fingerDevice.Match(image, candidates);
+                if (result != -1)
+                {
+                    this.Dispatcher.Invoke(System.Windows.Threading.DispatcherPriority.Normal, (new Action(() =>
+                    {
+                        if (fingerDevice == currentTestDevice.Content) checkFinger.ShowPopUp("Identified as " + currentTemplates[candidates[result]]);
+                    }
+                        )));
+                }
+            }
+            finally
+            {
+                Monitor.Exit(lockAPI);
+            }
+        }
+
+        public void BiometricsCaptured(Object sender, FingerImage fingerImage)
+        {
+            try
+            {
+                this.Dispatcher.Invoke(System.Windows.Threading.DispatcherPriority.Normal,
+                new biometricsFetcher(ProcessImage), sender, fingerImage);
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Info(ex);
+            }
+        }
+
+        public void MessageSend(Object sender, String text)
+        {
+            try
+            {
+                this.Dispatcher.Invoke(new Action(() => checkFinger.SetText(text)));
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Info(ex);
+            }
+        }
+
+
+        public void DeviceFailure(Object sender)
+        {
+            // only for our device
+            foreach (var radioButton in TestDevicePanel.Children.OfType<RadioButton>().Where(rb => rb.Content == sender))
+            {
+                radioButton.Content = sender.ToString();
+
+                checkFinger.SetText("");
+                textClearTimerStop();
+                Ambassador.ClearCallback();
+                if (checkFinger != null)
+                {
+                    TestScannerPage.Children.Clear();
+                    checkFinger = null;
+                }
+                checkFinger = new FingerDisplay(Properties.Resources.no_device);
+                TestScannerPage.Children.Add(checkFinger);
+                MessageSend(sender, "Connect device and press refresh");
+
+                radioButton.IsEnabled = true;
+
+            }
+        }
+
+        public void SignalCaptured(Object sender, MSignal.SIGNAL sig)
+        {
+            try
+            {
+                switch (sig)
+                {
+                    case MSignal.SIGNAL.DEVICE_FAILURE:
+                        this.Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Background,
+                            new Action(() => DeviceFailure(sender)));
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Info(ex);
+            }
+        }
+
+        Dictionary<String, Dictionary<FingerTemplate, String>> templates = new Dictionary<String, Dictionary<FingerTemplate, String>>();
+        void BuildTestUserList()
+        {
+            try
+            {
+                List<WinUser> userList = _db.GetAllUsers();
+
+                templates.Clear();
+                foreach (var user in userList)
+                {
+                    foreach (var cred in user.credentials_List.OfType<FingerCredential>())
+                    {
+                        Dictionary<FingerTemplate, String> deviceTemplates;
+                        if (templates.ContainsKey(cred.device))
+                        {
+                            deviceTemplates = templates[cred.device];
+                        }
+                        else
+                        {
+                            deviceTemplates = new Dictionary<FingerTemplate, String>();
+                            templates.Add(cred.device, deviceTemplates);
+                        }
+                        foreach (var finger in cred.fingers)
+                        {
+                            if (finger.Template != null)
+                            {
+                                deviceTemplates.Add(finger.Template, user.ToString());
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.Log.Warn(e);
+            }
+        }
+
+
+
+
+        private void textClearTimerStart()
+        {
+            textReset = RESETER_TEXT_LIFETIME_MS;
+        }
+
+
+        /// <summary>
+        /// Call this to start Image clear timer
+        /// </summary>
+        private void imageClearTimerStart()
+        {
+            imageReset = RESETER_IMAGE_LIFETIME_MS;
+        }
+
+        /// <summary>
+        /// Call this to abort Image clear timer
+        /// </summary>
+        private void imageClearTimerStop()
+        {
+            imageReset = 0;
+        }
+
+        private void textClearTimerStop()
+        {
+            textReset = 0;
+        }
+
+        /// <summary>
+        /// Every IMAGE_RESETER_TIMER_PERIOD_MS check if we need to Clear some Image 
+        /// </summary>
+        /// <param name="Sender"></param>
+        /// <param name="e"></param>
+        private void imageClearTimerHandler(object sender, EventArgs e)
+        {
+
+            if (imageReset > 0)
+            {
+                imageReset -= RESETER_TIMER_PERIOD_MS;
+                if (imageReset <= 0)
+                {
+                    try
+                    {
+                        checkFinger.ClearImage();
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Log.Error("Error while stopping the timer" + ex);
+                    }
+                }
+            }
+
+            if (textReset > 0)
+            {
+                textReset -= RESETER_TIMER_PERIOD_MS;
+                if (textReset <= 0)
+                {
+                    try
+                    {
+                        checkFinger.SetText("Please, touch the scanner");
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Log.Error("Error while stopping the timer" + ex);
+                    }
+                }
+            }
+        }
+
+
+        private void TestScannerDisable()
+        {
+            if (currentTestDevice != null)
+            {
+                if (currentTestDevice.Content is IFingerDevice)
+                {
+                    (currentTestDevice.Content as IFingerDevice).Dispatch(COMMAND.LIVECAPTURE_STOP);
+                    Ambassador.ClearCallback();
+                    checkFinger.ClearImage();
+                }
+            }
+            if (imageReseter != null)
+            {
+                imageReseter.Stop();
+            }
+        }
+
+
+        private void TestRefresh_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                TestRefreshButton.IsEnabled = false;
+                this.Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Normal,
+                    new refreshFetcher(RefreshTestPage));
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Info(ex);
+            }
+        }
+    }
+}

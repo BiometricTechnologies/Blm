@@ -1,0 +1,3 @@
+obj\x86\Debug\Files.wixobj
+obj\x86\Debug\Product.wixobj
+obj\x86\Debug\shortcuts.wixobj

@@ -1,0 +1,35 @@
+﻿<UserControl x:Class="IdentaZone.IdentaMaster.UI.UserEdit.InfoBox"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+            Height="160" Width="500">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/UI/templates/UserEditStyles.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid Style="{StaticResource UEExternalGrid}">
+        <Grid.RowDefinitions >
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="65"/>
+        </Grid.RowDefinitions>
+        <Grid Style="{StaticResource UEInternalGrid}">
+            <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                <Label x:Name="UpperText" Grid.Row="0"  HorizontalAlignment="Center" FontSize="20" Content="Please, activate license to enable biometric login." Foreground="Red" />
+                <Label x:Name="BottomText" Grid.Row="1"  HorizontalAlignment="Center"/>
+            </StackPanel>
+        </Grid>
+        <Grid Grid.Row="1">
+            <Button Click="ProceedClick" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}">
+                <DockPanel>
+                    <Image Height="50" Source="pack://application:,,,/images/buttons/green.png" DockPanel.Dock="Left"/>
+                    <Label Style="{StaticResource UEButtonLabel}" VerticalAlignment="Center" DockPanel.Dock="Left">Continue</Label>
+                </DockPanel>
+            </Button>
+        </Grid>
+    </Grid>
+</UserControl>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <?include Variables.wxi?>
+  <Fragment>
+    <ComponentGroup Id="Shortcuts" Directory="ApplicationProgramsFolder">
+      <Component Id="ApplicationShortcutCalc" Guid="*" >
+        <Shortcut Id="AdminPanelShortcut"
+             Name="IdentaMaster"
+             Description="$(var.ProductName)"
+             Target="[IDENTAMASTERLOCATION]IdentaMaster.exe"
+             WorkingDirectory="IDENTAMASTERLOCATION"/>
+        <RemoveFolder Id="ApplicationProgramsFolder" On="uninstall"/>
+        <RegistryValue Root="HKCU" Key="Software\$(var.Manufacturer)\$(var.ProductName)" Name="Installed" Type="integer" Value="1" KeyPath="yes"/>
+      </Component>
+    </ComponentGroup>
+  </Fragment>
+  <Fragment>
+    <ComponentGroup Id="DesctopSc">
+      <Component Id="DesktopShortcut" Directory="ApplicationProgramsFolder" Guid="*">
+        <RegistryValue Id="RegShortcutDesktop" Root="HKCU"
+                Key="Software\$(var.Manufacturer)\$(var.ProductName)" Name="DesktopSC" Value="1"
+                Type="integer" KeyPath="yes" />
+        <Shortcut Id="desktopSC"
+                  Name="IdentaMaster"
+                  Description="$(var.ProductName)"
+                  Target="[IDENTAMASTERLOCATION]IdentaMaster.exe"
+                  WorkingDirectory="IDENTAMASTERLOCATION"
+                  Directory="DesktopFolder"
+                            />
+      </Component>
+    </ComponentGroup>
+  </Fragment>
+</Wix>

@@ -1,0 +1,212 @@
+﻿using IdentaZone.BioConrols.Auxiliary;
+using IdentaZone.IdentaMaster.UI.UserEdit;
+using IdentaZone.IMPlugin.PluginManager;
+using System;
+using System.Collections.Generic;
+using System.Windows;
+
+namespace IdentaZone.IdentaMaster.UserEdit
+{
+    /// <summary>
+    /// Interaction logic for UserEdit.xaml
+    /// </summary>
+    public partial class Base : Window
+    {
+        Action updateImage;
+        public XmlDB.LOGIN_TYPE LoginType { get; set; }
+
+        Licenser Licenser;
+        Activate activateUser;
+        Update updateUser;
+        Options options;
+        Biometrics biometrics;
+        public String Fullname;
+        public String Password { get; set; }
+        public String Username;
+        String[] fingers = new String[10] { "LEFT THUMB", "LEFT INDEX", "LEFT MIDDLE", "LEFT RING", "LEFT LITTLE", "RIGHT THUMB", "RIGHT INDEX", "RIGHT MIDDLE", "RIGHT RING", "RIGHT LITTLE" };
+
+        public PluginManager PluginManager;
+        public List<Credential> Credentials;
+        public List<WinUser> Users;
+        private WinUser winUser;
+        public STATUS Status;
+
+        public enum RESULT { CANCELED, UPDATE_USER, DEACTIVATE, DELETE, RESTORE };
+        public enum STATUS { OK, DISABLED, DELETED, DEACTIVATED };
+        public RESULT Result { get; set; }
+
+
+        public Base(string fullname, List<Credential> tmpCredentials, PluginManager pluginManager, WinUser winUser, STATUS isDeleted, String username, List<WinUser> users, Licenser licenser)
+        {
+
+            this.Fullname = fullname;
+            this.Credentials = tmpCredentials;
+            this.winUser = winUser;
+            this.Status = isDeleted;
+            this.Username = username;
+            this.PluginManager = pluginManager;
+            this.Users = users;
+            Licenser = licenser;
+
+            if (winUser != null)
+            {
+                /// Translate string representation of login Type into XMLDB_LoginType
+                if (winUser.Identification == XmlDB.LOGIN_STRING[(int)XmlDB.LOGIN_TYPE.BIO])
+                {
+                    this.LoginType = XmlDB.LOGIN_TYPE.BIO;
+                }
+                else if (winUser.Identification == XmlDB.LOGIN_STRING[(int)XmlDB.LOGIN_TYPE.MIXED])
+                {
+                    this.LoginType = XmlDB.LOGIN_TYPE.MIXED;
+
+                }
+                else
+                {
+                    this.LoginType = XmlDB.LOGIN_TYPE.PASS;
+                }
+                this.Password = winUser.Password;
+            }
+            else
+            {
+                this.LoginType = XmlDB.LOGIN_TYPE.MIXED;
+                this.Password = "";
+            }
+
+            InitializeComponent();
+        }
+
+        public void ActivateProceed()
+        {
+
+            options = new Options(this);
+            Embed.Children.Clear();
+            Embed.Children.Add(options);
+        }
+
+        public void ActivateCancel()
+        {
+            this.Close();
+        }
+
+        public void OptionsProceed(String _password, XmlDB.LOGIN_TYPE loginType)
+        {
+            this.LoginType = loginType;
+            Password = _password;
+            if (this.LoginType == XmlDB.LOGIN_TYPE.PASS)
+            {
+                Result = RESULT.UPDATE_USER;
+                this.Close();
+                return;
+            }
+
+            biometrics = new Biometrics(this);
+            Embed.Children.Clear();
+            updateImage = biometrics.updateImageAction;
+            Embed.Children.Add(biometrics);
+        }
+
+        protected override void OnRenderSizeChanged(SizeChangedInfo sizeInfo)
+        {
+            base.OnRenderSizeChanged(sizeInfo);
+
+            //If the Height has changed then calc half of the the offset to move the form
+            if (sizeInfo.HeightChanged == true)
+            {
+                this.Top += (sizeInfo.PreviousSize.Height - sizeInfo.NewSize.Height) / 2;
+            }
+
+            //If the Width has changed then calc half of the the offset to move the form
+            if (sizeInfo.WidthChanged == true)
+            {
+                this.Left += (sizeInfo.PreviousSize.Width - sizeInfo.NewSize.Width) / 2;
+            }
+        }
+
+        public void BiometricsUpdate()
+        {
+            Result = RESULT.UPDATE_USER;
+            if (Licenser.State == Licenser.STATE.NOT_REGISTERED)
+            {
+                var infoBox = new InfoBox(this);
+                Embed.Children.Clear();
+                Embed.Children.Add(infoBox);
+            }
+            else
+            {
+                this.Close();
+            }
+        }
+
+        void BiometricsDeactivate()
+        {
+
+            this.Close();
+        }
+
+        public void UpdateProceed()
+        {
+            options = new Options(this);
+            Embed.Children.Clear();
+            Embed.Children.Add(options);
+        }
+
+        public void UpdateDeactivate()
+        {
+            if (Status != STATUS.DEACTIVATED)
+            {
+                MessageBoxButton btnMessageBox = MessageBoxButton.YesNo;
+                MessageBoxImage icnMessageBox = MessageBoxImage.Warning;
+                MessageBoxResult rsltMessageBox = MessageBox.Show("Do you want to save user biometrics for future reactivation", "UpdateDeactivate User", btnMessageBox, icnMessageBox);
+
+                switch (rsltMessageBox)
+                {
+                    case MessageBoxResult.Yes:
+                        Result = RESULT.DEACTIVATE;
+                        this.Close();
+                        break;
+                    case MessageBoxResult.No:
+                        Result = RESULT.DELETE;
+                        this.Close();
+                        break;
+                }
+            }
+            else
+            {
+                Result = RESULT.DELETE;
+                this.Close();
+            }
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            updateUser = new Update(this);
+            activateUser = new Activate(this);
+            if (winUser != null)
+            {
+                Embed.Children.Add(updateUser);
+            }
+            else
+            {
+                Embed.Children.Add(activateUser);
+            }
+        }
+
+        public void UpdateDelete()
+        {
+            Result = RESULT.DELETE;
+            this.Close();
+        }
+
+        public void UpdateRestore()
+        {
+            Result = RESULT.RESTORE;
+            this.Close();
+        }
+
+
+        internal void InfoBoxProceed()
+        {
+            this.Close();
+        }
+    }
+}

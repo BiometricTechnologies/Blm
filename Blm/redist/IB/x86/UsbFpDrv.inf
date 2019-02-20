@@ -1,0 +1,118 @@
+;
+; Copyright (c) 2009 Integrated Biometrics LLC
+; Integrated Biometrics USB-FP Fingerprint Sensor driver
+;
+;Module Name:
+;
+;    UsbFpDrv.INF
+;
+;Abstract:
+;    Installation inf for the USB-FP Integrated Biometrics Fingerprint sensor
+;
+;
+
+[Version]
+Signature="$WINDOWS NT$"
+Class=Biometric
+ClassGUID={53D29EF7-377C-4D14-864B-EB3A85769359}
+Provider=%IntegratedBiometrics%
+; Date and Version is placeholder only; Actual date and version set in 'sources' and .rc file by StampInf, etc
+DriverVer=06/03/2009,2.0.2.00
+CatalogFile=UsbFpDrv.cat
+
+
+; ================= Class section =====================
+;  Windows XP requires this section name
+[ClassInstall32]
+AddReg=AddRegBiometricClass
+
+[AddRegBiometricClass]
+HKR,,,,%BiometricClassName%
+
+[DestinationDirs]
+DefaultDestDir = 11  ; This is equivalent to %windir%\system32 for NT-based platforms
+NA2USB.Files.Ext = 10,System32\Drivers
+
+; ================= Device section =====================
+
+[Manufacturer]
+%MfgName%=IntegratedBiometrics,NTx86
+
+; For Win2K
+[IntegratedBiometrics]
+; Net Access II V1.0
+%USB\VID_113F&PID_1004.DeviceDesc%=NA2USB.Dev, USB\VID_113F&PID_1004
+
+; For XP and later
+[IntegratedBiometrics.NTx86]
+; Net Access II V1.0
+%USB\VID_113F&PID_1004.DeviceDesc%=NA2USB.Dev, USB\VID_113F&PID_1004
+
+
+[NA2USB.Dev.NT]
+CopyFiles=NA2USB.Files.Ext
+
+[NA2USB.Dev.NT.Services]
+Addservice = NA2USB, 0x00000002, NA2USB.AddService
+
+[NA2USB.AddService]
+DisplayName    = %NA2USB.SvcDesc%
+ServiceType    = 1                  ; SERVICE_KERNEL_DRIVER
+; StartType      = 2                  ; SERVICE_AUTO_START
+StartType      = 3                  ; SERVICE_DEMAND_START
+ErrorControl   = 1                  ; SERVICE_ERROR_NORMAL
+ServiceBinary  = %10%\System32\Drivers\UsbFpDrv.sys
+AddReg         = NA2USB.AddReg
+LoadOrderGroup = Base
+
+[NA2USB.AddReg]
+HKR,,DevLoader,,*ntkern
+HKR,,NTMPDriver,,UsbFpDrv.sys
+;HKR,"Parameters","DebugLevel",0x10001,2
+;HKR, Parameters\Wdf, VerboseOn,       0x00010001, 1
+;HKR, Parameters\Wdf, VerifierOn,      0x00010001, 1
+;HKR, Parameters\Wdf, DbgBreakOnError, 0x00010001, 1
+
+[NA2USB.Files.Ext]
+UsbFpDrv.sys
+
+[SourceDisksNames]
+1=%Disk_Description%,,,
+
+[SourceDisksFiles]
+UsbFpDrv.sys = 1
+
+;-------------- WDF Coinstaller installation
+[DestinationDirs]
+CoInstaller_CopyFiles = 11
+
+[NA2USB.Dev.NT.CoInstallers]
+AddReg=CoInstaller_AddReg
+CopyFiles=CoInstaller_CopyFiles
+
+[CoInstaller_CopyFiles]
+WdfCoInstaller01007.dll
+
+[SourceDisksFiles]
+WdfCoInstaller01007.dll=1 ; make sure the number matches with SourceDisksNames
+
+[CoInstaller_AddReg]
+HKR,,CoInstallers32,0x00010000, "WdfCoInstaller01007.dll,WdfCoInstaller"
+
+[NA2USB.Dev.NT.Wdf]
+KmdfService = NA2USB, NA2USB_wdfsect
+
+[NA2USB_wdfsect]
+KmdfLibraryVersion = 1.7
+
+;---------------------------------------------------------------;
+
+[Strings]
+IntegratedBiometrics="Integrated Biometrics LLC"
+MfgName="Integrated Biometrics LLC"
+BiometricClassName="Biometric"
+Disk_Description= "Integrated Biometrics USB-FP driver Installation Disk"
+NA2USB.SvcDesc="Integrated Biometrics USB-FP Driver(UsbFpDrv.sys)"
+USB\VID_113F&PID_1004.DeviceDesc="Integrated Biometrics USB-FP Fingerprint Sensor driver"
+
+

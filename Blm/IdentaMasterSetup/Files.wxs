@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <?include Variables.wxi?>
+  <Fragment>
+    <ComponentGroup Id="ProductComponents" Directory="IDENTAMASTERLOCATION">
+      <Component Id="ProductComponent" Guid="02ECEA1C-1ED1-4EF7-8B74-8BBAB017ABBF">
+        <File Id="AdminPanel" DiskId="1" 
+              Source="$(var.IMDir)\IdentaMaster.exe"/>
+        <!--<RemoveFile Id="Database" Name="usrdb" On="uninstall"/>-->
+        <File Id="BioControls" DiskId="1"
+              Source="$(var.IMDir)\BioControls.dll"/>
+        <File Id="AdminPanelConfig" DiskId="1"
+              Source="$(var.IMDir)\IdentaMaster.exe.config"/>
+        <File Id="UIControls" DiskId="1"
+              Source="$(var.IMDir)\UIControls.dll"/>
+        <File Id="LicensingDotNet" DiskId="1"
+              Source="$(var.IMDir)\Licensing.Net.dll"/>
+        <File Id="AdminPanelLoggerDll" DiskId="1"
+              Source="$(var.IMDir)\log4net.dll"/>
+        <File Id="Transitionals" DiskId="1" 
+              Source="$(var.SolutionDir)IdentaMaster\IdentaMaster\lib\Transitionals\Transitionals.dll"/>
+      </Component>
+      <Component Id="InstallPath" Guid="7B2F2C2A-9BF3-4D67-BBD6-9C58FFCFB5A1">
+        <RegistryValue Root="HKLM" Key="Software\IdentaMaster" Type="string" Name="InstallDir" Value="[IDENTAMASTERLOCATION]"/>
+        <RegistryValue Root="HKLM"
+                      Key="Software\IdentaZone"
+                      Name="PluginsPath"
+                      Type="string"
+                      Value="[IZPATH]"/>
+      </Component>
+
+    </ComponentGroup>
+
+
+
+    <ComponentGroup Id="HelpHtml" >
+      <Component Id="HelpHtmlIndex" Guid="12267C4C-A5E4-4A98-B9C1-E7088A064427" Directory="HELPINDEXLOCATION">
+        <File Id="manual_page.htm" DiskId="1" 
+              Source="$(var.IMDir)\help\manual_page.htm"/>
+      </Component>
+      <Component Id="helpImages" Guid="9A1D2237-01D9-49EF-8D71-8A21A6EE2F03" Directory="HELPIMAGESLOCATION">
+        <File Id="enroll_finger.png" DiskId="1"
+              Source="$(var.IMDir)\help\images\enroll_finger.png"/>
+        <File Id="enroll_hands.png" DiskId="1"
+              Source="$(var.IMDir)\help\images\enroll_hands.png"/>
+        <File Id="enrollment_list.png" DiskId="1"
+              Source="$(var.IMDir)\help\images\enrollment_list.png"/>
+        <File Id="history.png" DiskId="1"
+              Source="$(var.IMDir)\help\images\history.png"/>
+        <File Id="licensing.png" DiskId="1"
+              Source="$(var.IMDir)\help\images\licensing.png"/>
+        <File Id="logon.jpeg" DiskId="1"
+              Source="$(var.IMDir)\help\images\logon.jpeg"/>
+        <File Id="test_scanner.png" DiskId="1"
+              Source="$(var.IMDir)\help\images\test_scanner.png"/>
+        <File Id="welcome.png" DiskId="1"
+              Source="$(var.IMDir)\help\images\welcome.png"/>
+        <File Id="fujitsu_enroll_complete.png" DiskId="1"
+              Source="$(var.IMDir)\help\images\fujitsu_enroll_complete.png"/>
+        <File Id="fujitsu_enroll_select.png" DiskId="1"
+              Source="$(var.IMDir)\help\images\fujitsu_enroll_select.png"/>
+      </Component>
+    </ComponentGroup>
+
+    
+    <!--<ComponentGroup Id="System32IdentaZone"  Directory="SystemIdentaZone">
+      <Component Id="SystemLogs" Guid="F6E398B1-6F1F-451D-A01A-B77C0386D2B5">
+        --><!--LOGS removal--><!--
+        <RemoveFile Id="SingleLogin" Name="singlelogin.log" On="both"/>
+        <RemoveFile Id="SingleLogin1" Name="singlelogin.log1" On="both"/>
+        <RemoveFile Id="SingleLogin2" Name="singlelogin.log2" On="both"/>
+        <RemoveFile Id="SingleLogin3" Name="singlelogin.log3" On="both"/>
+        <RemoveFile Id="SingleLogin4" Name="singlelogin.log4" On="both"/>
+        <RemoveFile Id="SingleLogin5" Name="singlelogin.log5" On="both"/>
+        <RemoveFile Id="multilogin" Name="multilogin.log" On="both"/>
+        <RemoveFile Id="multilogin1" Name="multilogin.log1" On="both"/>
+        <RemoveFile Id="multilogin2" Name="multilogin.log2" On="both"/>
+        <RemoveFile Id="multilogin3" Name="multilogin.log3" On="both"/>
+        <RemoveFile Id="multilogin4" Name="multilogin.log4" On="both"/>
+        <RemoveFile Id="multilogin5" Name="multilogin.log5" On="both"/>
+        <RemoveFile Id="usrdb" Name="usrdb" On="both"/>
+      </Component>
+    </ComponentGroup>-->
+    
+    <ComponentGroup Id="MultiloginLibs" Directory="LIBLOCATION">
+      <Component Id="MultiloginLib" Guid="07CA8E9D-3D10-453E-BE48-67FC64BF03EA">
+        <!--Keys-->
+        <RegistryKey Root="HKLM" Key="SOFTWARE\Microsoft\Windows\CurrentVersion\Authentication\Credential Providers\{46409ad9-942c-4fba-a11f-673bb6e31cf4}"
+          ForceDeleteOnUninstall="yes" ForceCreateOnInstall="no"/>
+        <RegistryKey Root="HKLM" Key="SOFTWARE\Microsoft\Windows\CurrentVersion\Authentication\Credential Provider Filters\{46409ad9-942c-4fba-a11f-673bb6e31cf4}"
+          ForceDeleteOnUninstall="yes" ForceCreateOnInstall="no"/>
+        <RegistryKey Root="HKCR" Key="CLSID\{46409ad9-942c-4fba-a11f-673bb6e31cf4}"
+         ForceDeleteOnUninstall="yes" ForceCreateOnInstall="no"/>
+        <!--Files-->
+        <File Id="DPLogin" DiskId="1" Source="$(var.SolutionDir)Release_$(var.Platform)\DPLogin.dll"/>
+
+      </Component>
+    </ComponentGroup>
+    <ComponentGroup Id="SingleloginLibs" Directory="LIBLOCATION">
+      <Component Id="SingleloginLib" Guid="74725FCC-ACE5-4899-900B-8A3FA995A3BE">
+        <!--Keys-->
+        <RegistryKey Root="HKLM" Key="SOFTWARE\Microsoft\Windows\CurrentVersion\Authentication\Credential Providers\{C0D9D8DE-C8A2-4533-8146-172136A20F2E}"
+          ForceDeleteOnUninstall="yes" ForceCreateOnInstall="no"/>
+        <RegistryKey Root="HKCR" Key="CLSID\{C0D9D8DE-C8A2-4533-8146-172136A20F2E}"
+         ForceDeleteOnUninstall="yes" ForceCreateOnInstall="no"/>
+        <!--Files-->
+        <File Id="SingleLogin" DiskId="1" Source="$(var.SolutionDir)Release_$(var.Platform)\SingleLogin.dll"/>
+      </Component>
+    </ComponentGroup>
+
+    <!-- Login plugins -->
+    
+    <!-- Google log lib -->
+    <ComponentGroup Id="LibGlogLibs" Directory="LIBLOCATION">
+      <Component Id="LibGlogLib" Guid="8AA1B5ED-C60F-49ED-A9C4-2D8AB7ADFB46">
+        <File Id="LibGlog" DiskId="1" Source="$(var.ProjectDir)libs\$(var.Platform)\libglog.dll"/>
+      </Component>
+    </ComponentGroup>
+    
+    <!-- APR libs-->
+    <ComponentGroup Id="LibAprLibs" Directory="LIBLOCATION">
+      <Component Id="LibAprLib" Guid="AB56A201-6CC8-440B-90B3-7CF125EFEFFF">
+        <File Id="LibApr" DiskId="1" Source="$(var.ProjectDir)libs\$(var.Platform)\libapr-1.dll"/>      
+        <File Id="LibAprIconv" DiskId="1" Source="$(var.ProjectDir)libs\$(var.Platform)\libapriconv-1.dll"/>
+      </Component>
+    </ComponentGroup>
+
+  </Fragment>
+  
+</Wix>

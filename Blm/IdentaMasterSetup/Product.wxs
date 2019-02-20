@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <?include Variables.wxi?>
+
+  <Product Id="*" Name="$(var.ProductName)" Language="1033" Version="$(var.ProductVersion)" Manufacturer="$(var.Manufacturer)" UpgradeCode="$(var.UpgradeCode)">
+    <Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
+
+    <Upgrade Id="$(var.UpgradeCode)">
+      <UpgradeVersion OnlyDetect="yes" Minimum="$(var.ProductVersion)" Property="NEWERVERSIONDETECTED" IncludeMinimum="no" />
+      <UpgradeVersion OnlyDetect="no" Maximum="$(var.ProductVersion)" Property="OLDERVERSIONBEINGUPGRADED" IncludeMaximum="no" />
+    </Upgrade>
+    <InstallExecuteSequence>
+      <RemoveExistingProducts Before="InstallInitialize" />
+    </InstallExecuteSequence>
+
+    <Property Id="OLDVERSION" Secure="yes" />
+    <Upgrade Id="$(var.UpgradeCode)">
+      <UpgradeVersion
+             Minimum="1.0.0.0" Maximum="99.0.0.0"
+             Property="OLDVERSION"
+             IncludeMinimum="yes" IncludeMaximum="no" />
+    </Upgrade>
+
+    <CustomAction Id="NewerVersion" Error="A later version of [ProductName] is already installed." />
+
+
+    <MediaTemplate EmbedCab="yes"/>
+
+    <Feature Id="ProductFeature" Title="$(var.ProductName)" Level="1">
+      <ComponentGroupRef Id="ProductComponents" />
+      <ComponentGroupRef Id="Shortcuts"/>
+      <ComponentGroupRef Id="MultiloginLibs"/>
+      <ComponentGroupRef Id="SingleloginLibs"/>
+      <ComponentGroupRef Id="LibGlogLibs"/>
+      <ComponentGroupRef Id="HelpHtml"/>
+      <ComponentGroupRef Id="DesctopSc"/>
+      <ComponentGroupRef Id="GAC_GROUP"/>
+      <!--<ComponentGroupRef Id="System32IdentaZone"/>-->
+      <ComponentGroupRef Id="LibAprLibs"/>
+    </Feature>
+
+    <Property Id="WIXUI_INSTALLDIR" Value="INSTALLLOCATION"></Property>
+    <WixVariable Id="WixUILicenseRtf" Overridable="yes" Value="License.rtf"/>
+    <WixVariable Id="WixUIDialogBmp" Value="left.bmp" />
+    <UIRef Id="WixUI_InstallDir"/>
+  </Product>
+
+  <Fragment>
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <Directory Id="$(var.SystemPlatform)" Name="SystemFolder">
+        <Directory Id="SystemIdentaZone" Name="IdentaZone">
+          <Directory Id="SystemIdentaZoneIdentaMaster" Name="IdentaMaster">
+          </Directory>
+        </Directory>
+      </Directory>
+      <Directory Id="$(var.ProgramFilesPlatform)">
+        <Directory Id="IdentaZoneFolder" Name="IdentaZone">
+          <Directory Id="IDENTAMASTERLOCATION" Name="IdentaMaster">
+            <Directory Id="LIBLOCATION" Name="login"/>
+            <Directory Id="IMAGELOCATION" Name="images"/>
+            <Directory Id="HELPINDEXLOCATION" Name="help">
+              <Directory Id="HELPIMAGESLOCATION" Name="images"></Directory>
+            </Directory>
+          </Directory>
+        </Directory>
+      </Directory>
+      <Directory Id="IZPATH" Name="[IZPATH]">
+        <Directory Id="PLUGINLOCATION" Name="Plugins"/>
+      </Directory>
+      <Directory Id="ProgramMenuFolder">
+        <Directory Id="ApplicationProgramsFolder" Name="$(var.ProductName)">
+        </Directory>
+      </Directory>
+      <Directory Id="DesktopFolder" Name="Desktop" />
+    </Directory>
+
+  </Fragment>
+
+</Wix>

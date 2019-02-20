@@ -1,0 +1,4 @@
+﻿;!@Install@!UTF-8!
+Title = "Secugen Driver"
+RunProgram="dpinst.exe /SW"
+;!@InstallEnd@!

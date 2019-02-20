@@ -1,0 +1,391 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Documents;
+using System.Windows.Threading;
+
+namespace IdentaMaster.UserEdit
+{
+    /// <summary>
+    /// Interaction logic for Biometrics.xaml
+    /// </summary>
+    public partial class Biometrics : UserControl
+    {
+        // how frequent is timer checked
+        const int RESETER_TIMER_PERIOD_MS = 100;
+        // How long will image last on page
+        const int RESETER_IMAGE_LIFETIME_MS = 3000;
+       
+        const int RESETER_TEXT_LIFETIME_MS = 2000;
+        DispatcherTimer imageReseter = null;
+        // Timer for fingerImageBoxClearing
+        int nextReset = 0;
+        int textReset = 0;
+        public String baseMessage;
+
+        IDevice currentDevice;
+        FingerCredential currentCredential;
+
+        List<WinUser> users;
+        List<IDevice> devices;
+        List<Credential> credentials;
+        PluginManager pluginManager;
+
+        FingerChooser fingerChooser;
+        FingerDisplay fingerDisplay = new FingerDisplay();
+
+        Action Update;
+        public Action updateImage;
+
+        int fingerNum;
+        bool isBusy = false;
+
+
+
+        private void UpdateDeviceList()
+        {
+            devices = new List<IDevice>();
+            foreach (var deviceCtrl in pluginManager.deviceControls)
+            {
+                deviceCtrl.EnumerateDevices();
+                devices.AddRange(deviceCtrl.activeDevices);
+            }
+            foreach (var device in devices)
+            {
+                ProviderBox.Items.Add(device);
+            }
+            if (devices.Count == 0)
+            {
+                showMessage("Please connect scanner and restart enrollment procedure");
+            }
+        }
+
+        private void showMessagePopup(String message)
+        {
+            showMessage(message);
+            textReset = RESETER_TEXT_LIFETIME_MS;
+        }
+
+        /// <summary>
+        /// Call this to start image clear timer
+        /// </summary>
+        private void showMessageBase(String message)
+        {
+            baseMessage = message;
+        }
+
+        private void showImage(FingerImage img)
+        {
+            fingerDisplay.ShowImage(img);
+            nextReset = RESETER_IMAGE_LIFETIME_MS;
+        }
+
+        /// <summary>
+        /// Every IMAGE_RESETER_TIMER_PERIOD_MS check if we need to Clear some image 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void imageClearTimerHandler(object sender, EventArgs e)
+        {
+
+            if (nextReset > 0)
+            {
+                nextReset -= RESETER_TIMER_PERIOD_MS;
+                if (nextReset <= 0)
+                {
+                    try
+                    {
+                        fingerDisplay.ClearImage();
+                        UpdateFingers();
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Log.Error("Error while stopping the timer" + ex);
+                    }
+                }
+            }
+
+            if (textReset > 0)
+            {
+                textReset -= RESETER_TIMER_PERIOD_MS;
+                if (textReset <= 0)
+                {
+                    try
+                    {
+                        showMessage(baseMessage);
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Log.Error("Error while stopping the timer" + ex);
+                    }
+                }
+            }
+        }
+
+        public Biometrics(Action update, List<Credential> credentials, PluginManager pluginManager, List<WinUser> users, Window BaseWindow)
+        {
+
+            Update = update;
+            this.users = users;
+            this.credentials = credentials;
+            this.pluginManager = pluginManager;
+
+            fingerChooser = new FingerChooser(new List<int>(), fingerClicked);
+
+            InitializeComponent();
+
+            // Image Reseter
+            imageReseter = new System.Windows.Threading.DispatcherTimer();
+            imageReseter.Tick += new EventHandler(imageClearTimerHandler);
+            imageReseter.Interval = new TimeSpan(0, 0, 0, 0, RESETER_TIMER_PERIOD_MS);
+            imageReseter.Start();
+
+            Embed.Children.Add(fingerChooser);
+            Scanner.Children.Add(fingerDisplay);
+            fingerDisplay.SetText("");
+            UpdateDeviceList();
+        }
+
+        public void UpdateFingers()
+        {
+            List<int> newFingers = new List<int>();
+
+            if (currentCredential != null)
+            {
+                newFingers.AddRange(currentCredential.getFingerList());
+            }
+
+            fingerChooser.UpdateFingers(newFingers);
+        }
+
+        /// <summary>
+        /// Call this function to end / abort enrollment process
+        /// </summary>
+        public void endEnrollment()
+        {
+            EnrollmentProgress.Value = 0;
+
+            currentDevice.StopEnrollment();
+            Ambassador.ClearListeners();
+
+            //currentDevice.StopEnrollment();
+            UpdateFingers();
+            isBusy = false;
+            fingerDisplay.FingerImage.Source = null;
+            fingerChooser.DeSelectFinger(fingerNum);
+            Cancel.Visibility = Visibility.Collapsed;
+            UpdateBtn.Visibility = Visibility.Visible;
+            ProviderBox.IsEnabled = true;
+
+
+            Ambassador.SetBiometricsCaptured(BiometricsCaptured);
+            Ambassador.SetSingleCaptured(SingleCaptured);
+            currentDevice.StartSingleFinger();
+            showMessageBase("Please, select finger to enroll or touch the scanner to verify it");
+        }
+
+        public void showMessage(String msg)
+        {
+            Dispatcher.Invoke(new Action(() => Info.Content = msg));
+        }
+
+        public void updateProgress(int value)
+        {
+            Dispatcher.Invoke(new Action(() => EnrollmentProgress.Value = value));
+        }
+
+
+        public void fingerClicked(int fingerNum)
+        {
+            if (isBusy)
+            {
+                showMessagePopup("Please, finish current enrollment");
+                return;
+            }
+            if (currentDevice == null)
+            {
+                showMessagePopup("No device is selected, please select one");
+                return;
+            }
+
+            if (currentCredential.getFingerList().Contains(fingerNum))
+            {
+                MessageBoxButton btnMessageBox = MessageBoxButton.YesNo;
+                MessageBoxImage icnMessageBox = MessageBoxImage.Warning;
+                MessageBoxResult rsltMessageBox = MessageBox.Show("Do you want to remove enrollment?", "Remove enrollment", btnMessageBox, icnMessageBox);
+
+                switch (rsltMessageBox)
+                {
+                    case MessageBoxResult.Yes:
+                        currentCredential.RemoveFinger(fingerNum);
+                        UpdateFingers();
+                        break;
+                    case MessageBoxResult.No:
+                        break;
+                }
+            }
+            else
+            {
+                this.fingerNum = fingerNum;
+                isBusy = true;
+                UpdateFingers();
+                fingerChooser.SelectFinger(fingerNum);
+                Cancel.Visibility = Visibility.Visible;
+                UpdateBtn.Visibility = Visibility.Collapsed;
+                ProviderBox.IsEnabled = false;
+
+                this.UpdateLayout();
+                Ambassador.SetBiometricsCaptured(BiometricsCaptured);
+                Ambassador.SetSendMessage(showMessage);
+                Ambassador.SetUpdateProgress(updateProgress);
+                Ambassador.SetBiometricsEnrolled(BiometricsEnrolled);
+                currentDevice.StartEnrollment(); //BiometricsCaptured, SendMessage, BiometricsEnrolled
+            }
+        }
+
+        private void BiometricsEnrolled(List<IdentaMaster.FingerTemplate> bios)
+        {
+            if (bios != null)
+            {
+                // Check whether it is already enrolled
+                foreach (var user in users)
+                {
+                    foreach (var fingerCred in user.credentials_List.OfType<FingerCredential>())
+                    {
+                        if (fingerCred.device.Equals(currentDevice.GetType().ToString()))
+                        {
+                            foreach (var bio in bios)
+                            {
+                                int fingerIndex = currentDevice.FindFingerIndex(bio, fingerCred.fingers);
+                                if (fingerIndex != -1)
+                                {
+                                    Dispatcher.Invoke(new Action(() => showMessagePopup("Already registered as "
+                                   + FingerCredential.GetFingerName(fingerIndex) + 
+                                   " finger of user " +
+                                   user.ToString())));
+                                    goto end;
+                                }
+                            }
+                        }
+                    }
+                }
+                foreach (var tmpl in bios)
+                {
+                    String str = tmpl.Serialize();
+                    currentCredential.AddFinger(new Finger(fingerNum, str, tmpl.type));
+                }
+            }
+
+        end:
+            Task.Factory.StartNew(() =>
+                {
+                    Dispatcher.Invoke(new Action(() => endEnrollment()));
+                });
+        }
+
+
+        private void SendMessage(object sender, Message message)
+        {
+            if (message is MessageText)
+            {
+                showMessage((message as MessageText).message);
+            }
+            if (message is MessageProgress)
+            {
+                updateProgress((message as MessageProgress).GetValue());
+            }
+        }
+
+        private void BiometricsCaptured(IdentaMaster.Biometrics biometrics)
+        {
+            FingerImage fingerImage = biometrics as FingerImage;
+            Dispatcher.Invoke(new Action(() => showImage(fingerImage)));
+        }
+
+
+        private void SingleCaptured(FingerTemplate template)
+        {
+            int fingerIndex = currentDevice.FindFingerIndex(template, currentCredential.fingers);
+
+            if (fingerIndex == -1)
+            {
+                Dispatcher.Invoke(new Action(() => showMessagePopup("Finger is not registered")));
+                Dispatcher.Invoke(new Action(() => showMessageBase("Please, select finger to enroll or touch the scanner to verify it")));
+            }
+            else
+            {
+                Dispatcher.Invoke(new Action(() => showMessagePopup("Finger is registered as " + FingerCredential.GetFingerName(fingerIndex))));
+                Dispatcher.Invoke(new Action(() => showMessageBase("Please, select finger to enroll or touch the scanner to verify it")));
+                Dispatcher.Invoke(new Action(() => fingerChooser.ShowFinger(fingerIndex)));
+            }
+
+        }
+
+        public void updateImageAction()
+        {
+            updateImage();
+        }
+
+
+        private void UpdateEnrollment(object sender, RoutedEventArgs e)
+        {
+            Update();
+        }
+
+        private void ProviderBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            currentCredential = null;
+            EnrollmentProgress.Value = 0;
+            IDevice device = (sender as ComboBox).SelectedItem as IDevice;
+            if (currentDevice != null)
+            {
+                Ambassador.ClearListeners();
+                currentDevice.StopCapture();
+            }
+
+            currentDevice = device;
+            Ambassador.SetBiometricsCaptured(BiometricsCaptured);
+            Ambassador.SetSingleCaptured(SingleCaptured);
+            currentDevice.StartSingleFinger();
+
+            foreach (var iface in currentDevice.GetType().GetInterfaces())
+            {
+                foreach (var fingerCred in credentials.OfType<FingerCredential>())
+                {
+                    if (fingerCred.device.Equals(currentDevice.GetType().ToString()))
+                    {
+                        currentCredential = fingerCred;
+                    }
+                }
+            }
+
+            if (currentCredential == null)
+            {
+                currentCredential = new FingerCredential();
+                currentCredential.device = currentDevice.GetType().ToString();
+                currentCredential.deviceName = currentDevice.ToString();
+                credentials.Add(currentCredential);
+            }
+
+            Cancel.Visibility = Visibility.Collapsed;
+            UpdateBtn.Visibility = Visibility.Visible;
+            ProviderBox.IsEnabled = true;
+            UpdateFingers();
+            showMessage("Please, select finger to enroll or touch the scanner to verify it");
+        }
+
+        private void CancelEnrollment(object sender, RoutedEventArgs e)
+        {
+            endEnrollment();
+        }
+
+        private void UserControl_Unloaded(object sender, RoutedEventArgs e)
+        {
+            Ambassador.ClearListeners();
+        }
+    }
+}

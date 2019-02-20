@@ -1,0 +1,80 @@
+﻿<UserControl x:Class="IdentaZone.IdentaMaster.SlideShowAbout"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:trans="clr-namespace:Transitionals;assembly=Transitionals"
+    xmlns:transc="clr-namespace:Transitionals.Controls;assembly=Transitionals"
+    xmlns:transt="clr-namespace:Transitionals.Transitions;assembly=Transitionals"
+    xmlns:io="clr-namespace:System.IO;assembly=System"
+    xmlns:io2="clr-namespace:System.IO;assembly=mscorlib"
+    xmlns:refl="clr-namespace:System.Reflection;assembly=mscorlib"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    Height="495" Width="492">
+
+    <UserControl.Resources>
+
+        <DataTemplate x:Key="ImageFileInfoTemplate" >
+            <Image Source="{Binding FullName}" HorizontalAlignment="Center" VerticalAlignment="Center" Width="1"/>
+
+        </DataTemplate>
+        <Style x:Key="bulletStyle">
+            <Style.Resources>
+                <SolidColorBrush x:Key="{x:Static SystemColors.ControlBrushKey}" Color="Transparent"/>
+                <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="Transparent"/>
+                <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrush}" Color="Transparent"/>
+
+            </Style.Resources>
+
+        </Style>
+        <Image x:Key="TemplateImg" Source="Slides\banner1.jpg"/>
+    </UserControl.Resources>
+    <Grid Margin="0">
+        <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom"  HorizontalAlignment="Center" Visibility="Hidden">
+            <RadioButton x:Name="bull1" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="10" Click="bull1_Click"/>
+            <RadioButton x:Name="bull2" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="10" Click="bull2_Click"/>
+            <RadioButton x:Name="bull3" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="10" Click="bull3_Click"/>
+            <RadioButton x:Name="bull4" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="10" Click="bull4_Click"/>
+            <RadioButton x:Name="bull5" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="10" Click="bull5_Click"/>
+            <RadioButton x:Name="bull6" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="10" Click="bull6_Click"/>
+        </StackPanel>
+        <Grid>
+            <Border Name="Mask"
+                        Background="White"
+                        BorderBrush="#FF39557C"
+                        
+                        CornerRadius="5" SnapsToDevicePixels="True" Margin="2,2"/>
+
+
+            <transc:Slideshow x:Name="Slideshow"  ItemTemplate="{StaticResource ImageFileInfoTemplate}" SelectionChanged="Slideshow_SelectionChanged" Foreground="{x:Null}" AutoAdvanceDuration="0:0:0" AutoAdvance="True" IsEnabled="False">
+                    <transc:Slideshow.OpacityMask>
+                        <VisualBrush Visual="{Binding ElementName=Mask}" />
+                    </transc:Slideshow.OpacityMask>
+                    <transc:Slideshow.Transition>
+                        <transt:FadeTransition/>
+                    </transc:Slideshow.Transition>
+                    <transc:SlideshowItem>
+                        <Image Source="Slides/banner1.jpg">
+                            <!--<Image.Clip >
+                    </Image.Clip>-->
+                        </Image>
+                    </transc:SlideshowItem>
+                    <transc:SlideshowItem>
+                        <Image Source="Slides/banner2.jpg"  />
+                    </transc:SlideshowItem>
+                    <transc:SlideshowItem>
+                        <Image Source="Slides/banner3.jpg" />
+                    </transc:SlideshowItem>
+                    <transc:SlideshowItem>
+                        <Image Source="Slides/banner4.jpg" />
+                    </transc:SlideshowItem>
+                    <transc:SlideshowItem>
+                        <Image Source="Slides/banner5.jpg" />
+                    </transc:SlideshowItem>
+                    <transc:SlideshowItem>
+                        <Image Source="Slides/banner6.jpg" />
+                    </transc:SlideshowItem>
+            </transc:Slideshow>
+            
+        </Grid>
+       
+    </Grid>
+</UserControl>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<LicenseKeyTemplate version="1">
+  <LicenseKey encoding="BASE64X" characterGroups="6" charactersPerGroup="6" groupSeparator="-" header="" footer="">
+    <Data>
+      <DataFields size="55">
+        <Field name="FeatureSet" type="Raw" size="55" offset="0" />
+      </DataFields>
+      <ValidationFields>
+        <Field name="Email" type="String" size="800" offset="0" />
+      </ValidationFields>
+    </Data>
+    <Signature size="161">
+      <SignaturePublicKey>COLkIEGAfGI54I9tBAI=</SignaturePublicKey>
+    </Signature>
+  </LicenseKey>
+</LicenseKeyTemplate>

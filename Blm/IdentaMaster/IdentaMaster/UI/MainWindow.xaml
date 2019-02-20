@@ -1,0 +1,382 @@
+﻿<Window         
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d" x:Class="IdentaZone.IdentaMaster.MainWindow"
+        xmlns:local="clr-namespace:IdentaZone.IdentaMaster"
+    Title="IdentaMaster" d:DesignWidth="1000" d:DesignHeight="618"  Height="618" Width="1000" Loaded="Window_Loaded" ResizeMode="NoResize" Closing="Window_Closing" WindowStartupLocation="CenterScreen">
+
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/BioControls;component/UI/templates/DefaultStyles.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/BioControls;component/UI/templates/ScrollViewStyle.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+
+    <Window.Background>
+        <ImageBrush ImageSource="pack://application:,,,/images/background.jpg"/>
+    </Window.Background>
+
+    <Grid Margin="40,40,40,0">
+        <!--IdentaMaster Logo-->
+        <Image  Panel.ZIndex="-1" Source="pack://application:,,,/images/identa_master_logo.png" HorizontalAlignment="Right" Margin="0,18,0,240" Width="250" Stretch="Uniform"/>
+        <!--IdentaZone Logo-->
+        <Image  Panel.ZIndex="-2" Source="pack://application:,,,/images/identa_zone_logo_small.png" HorizontalAlignment="Right" Height="150" Margin="0,0,0,-10" VerticalAlignment="Bottom" Width="200"/>
+        <!--Copyright-->
+        <!-- Help button -->
+        <Button Panel.ZIndex="5" Style="{StaticResource HelpButtonStyle}" Content="Help" Click="ShowHelp" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,0,215,50"/>
+
+        <StackPanel Orientation="Vertical" Panel.ZIndex="0" Height="550">
+            <!-- Button set -->
+            <StackPanel Orientation="Horizontal"  Width="980" VerticalAlignment="Top" HorizontalAlignment="Stretch">
+                <ToggleButton Name="aboutIdentaZoneBtn"  Checked="ToggleButton_Checked_1" Margin="5,0,10,0">
+                    <ToggleButton.Style>
+                        <Style TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource toggleButtonStyle}">
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type ToggleButton}">
+                                        <Image Name="image" Source="pack://application:,,,/images/tabs/AboutIdentaZonePassive.gif" Height="75"/>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="true">
+                                                <Setter TargetName="image" Property="Source" Value="pack://application:,,,/images/tabs/AboutIdentaZone.gif"/>
+                                            </Trigger>
+                                            <Trigger Property="IsChecked" Value="true">
+                                                <Setter TargetName="image" Property="Source" Value="pack://application:,,,/images/tabs/AboutIdentaZone.gif"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </ToggleButton.Style>
+                </ToggleButton>
+                <ToggleButton  x:Name="testScannerBtn" Checked="TestScannerTabSelected" Margin="5,0,10,0">
+                    <ToggleButton.Style>
+                        <Style TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource toggleButtonStyle}">
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type ToggleButton}">
+                                        <Image x:Name="image" Source="pack://application:,,,/images/tabs/TestScannerPassive.png" Height="75"/>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="true">
+                                                <Setter TargetName="image" Property="Source" Value="pack://application:,,,/images/tabs/TestScanner.png"/>
+                                            </Trigger>
+                                            <Trigger Property="IsChecked" Value="true">
+                                                <Setter TargetName="image" Property="Source" Value="pack://application:,,,/images/tabs/TestScanner.png"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </ToggleButton.Style>
+                </ToggleButton>
+                <ToggleButton  Name="licensingBtn" Checked="ToggleButton_Checked_3"  Margin="0,0,10,0">
+                    <ToggleButton.Style>
+                        <Style TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource toggleButtonStyle}">
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type ToggleButton}">
+                                        <Image Name="image" Source="pack://application:,,,/images/tabs/LicensingPassive.gif" Height="75"/>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="true">
+                                                <Setter TargetName="image" Property="Source" Value="pack://application:,,,/images/tabs/Licensing.gif"/>
+                                            </Trigger>
+                                            <Trigger Property="IsChecked" Value="true">
+                                                <Setter TargetName="image" Property="Source" Value="pack://application:,,,/images/tabs/Licensing.gif"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </ToggleButton.Style>
+                </ToggleButton>
+
+                <ToggleButton  Name="historyBtn" Checked="ToggleButton_Checked_4"  Margin="0,0,10,0">
+                    <ToggleButton.Style>
+                        <Style TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource toggleButtonStyle}">
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type ToggleButton}">
+                                        <Image Name="image" Source="pack://application:,,,/images/tabs/HistoryPassive.png" Height="75"/>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="true">
+                                                <Setter TargetName="image" Property="Source" Value="pack://application:,,,/images/tabs/History.png"/>
+                                            </Trigger>
+                                            <Trigger Property="IsChecked" Value="true">
+                                                <Setter TargetName="image" Property="Source" Value="pack://application:,,,/images/tabs/History.png"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </ToggleButton.Style>
+                </ToggleButton>
+                <ToggleButton  Name="userEnrollBtn" Checked="ToggleButton_Checked_5">
+                    <ToggleButton.Style>
+                        <Style TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource toggleButtonStyle}">
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type ToggleButton}">
+                                        <Image Name="image" Source="pack://application:,,,/images/tabs/EnrollmentPassive.png" Height="75"/>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="true">
+                                                <Setter TargetName="image" Property="Source" Value="pack://application:,,,/images/tabs/Enrollment.png"/>
+                                            </Trigger>
+                                            <Trigger Property="IsChecked" Value="true">
+                                                <Setter TargetName="image" Property="Source" Value="pack://application:,,,/images/tabs/Enrollment.png"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </ToggleButton.Style>
+                </ToggleButton>
+            </StackPanel>
+                    
+            <TabControl BorderThickness="0" Panel.ZIndex="0" HorizontalAlignment="Stretch" 
+                VerticalAlignment="Top" Background="Transparent" x:Name="tabControl" BorderBrush="Transparent" Height="475" IsTabStop="False">
+                <!--VerticalAlignment="Top" Background="Transparent" x:Name="tabControl" BorderBrush="Transparent" Height="475" IsTabStop="False" local:IgnoreCtrlTabBehaviour.Enabled="True">-->
+
+                <TabItem x:Name="aboutIdentaZoneTab" Style="{StaticResource InvisibleTabItem}" IsTabStop="False">
+                    <Grid>
+                        <TextBlock FontSize="20" Foreground="White" TextWrapping="Wrap" Text="IdentaMaster brings a new encrypted, secure way to access your PC with a biometric device of your choice" HorizontalAlignment="Right" Margin="0,0,0,100" VerticalAlignment="Bottom"  Width="340" TextAlignment="Right"/>
+                        <local:SlideShowAbout HorizontalAlignment="Left" Margin="0,20,0,0" VerticalAlignment="Top" Height="385" Width="353"/>
+                        <Label Content="Copyright © 2015 IdentaZone, Inc" Panel.ZIndex="-1" HorizontalAlignment="Right" VerticalAlignment="Bottom" Foreground="White" FontSize="10" Margin="0,0,3,25"/>
+                        <Label x:Name="ApplicationVersion" Content="V1.9" Foreground="White" FontSize="22" HorizontalAlignment="Left"  VerticalAlignment="Top" Width="125" Height="30" Padding="0" Margin="746,110,0,0"/>
+                    </Grid>
+                </TabItem>
+
+                <TabItem  x:Name="testScannerTab" Style="{StaticResource InvisibleTabItem}" IsTabStop="False">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="150"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="100"/>
+                        </Grid.RowDefinitions>
+
+                        <!-- TOP -->
+                        <StackPanel Orientation="Vertical" VerticalAlignment="Stretch" Grid.Row="0">
+                            <Label FontSize="18" Foreground="#ef7f1a" Content="Don't have a device?"/>
+                            <StackPanel Orientation="Horizontal"  Margin="0,-5,0,0">
+                                <Label FontSize="18" Foreground="#ef7f1a" Content="Please visit  our"/>
+                                <TextBlock VerticalAlignment="Center"><Hyperlink FontSize="18" FontWeight="Bold" NavigateUri="http://identamaster.com" RequestNavigate="Hyperlink_RequestNavigate" Focusable="False"><Run Text="online store http://identamaster.com"/></Hyperlink></TextBlock>
+                            </StackPanel>
+                            <Label FontSize="18" Foreground="#ef7f1a"  Content="to order your biometrics device now!" Margin="0,-5,0,5"/>
+                            <Label FontSize="18" FontWeight="Bold" Foreground="#ffffff" Content="Please click on arrow to test scanner."/>
+                        </StackPanel>
+
+                        <DockPanel Grid.Row="1" >
+                            <Grid DockPanel.Dock="Right" Width="250">
+                                <Border Style="{StaticResource IdentaGreenBorder}">
+                                    <StackPanel x:Name="TestScannerPage"/>
+                                </Border>
+                            </Grid>
+                            <!--Spacer-->
+                            <Grid Width="100" DockPanel.Dock="Right"/>
+
+                            <Grid DockPanel.Dock="Left">
+                                <Border Style="{StaticResource IdentaGreenBorder}">
+                                    <ScrollViewer IsTabStop="True"  ScrollViewer.HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+                                        <StackPanel x:Name="TestDevicePanel" Margin="10"/>
+                                    </ScrollViewer>
+                                </Border>
+                            </Grid>
+                        </DockPanel>
+                        <Button Grid.Row="2" Style="{StaticResource NextButtonStyle}" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="10,0,0,35" Height="60" x:Name="TestRefreshButton" Click="TestRefresh_Click">
+                            <StackPanel Orientation="Horizontal">
+                                <Image Height="50" Source="pack://application:,,,/images/buttons/Refresh-button2.png" Stretch="Fill"/>
+                            </StackPanel>
+                        </Button>
+                        <Label Content="Copyright © 2015 IdentaZone, Inc" Panel.ZIndex="-1" HorizontalAlignment="Right" VerticalAlignment="Bottom" Foreground="White" FontSize="10" Margin="0,0,3,25" Grid.Row="2"/>
+                    </Grid>
+                </TabItem>
+
+
+                <TabItem x:Name="licensingTab" Style="{StaticResource InvisibleTabItem}" IsTabStop="False">
+                    <Grid VerticalAlignment="Stretch">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="150"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="100"/>
+                        </Grid.RowDefinitions>
+                        <!-- Top row -->
+                        <DockPanel Grid.Row="0" VerticalAlignment="Center">
+                            <Label x:Name="licenseRedLabel" FontSize="20" Foreground="Red" Content="You must activate license to enable biometric logon." DockPanel.Dock="Top" Visibility="Collapsed"/>
+                        </DockPanel>
+
+
+                        <DockPanel Grid.Row="1">
+                            <!-- Слева -->
+
+                            <Grid DockPanel.Dock="Left"/>
+
+                            <!--Spacer-->
+                            
+
+
+                            <!-- Справа -->
+                            <Grid DockPanel.Dock="Right">
+                                <Border Style="{StaticResource IdentaGreenBorder}">
+                                    <StackPanel VerticalAlignment="Center" Margin="0,10,0,10">
+                                        <Label x:Name="enterLicensePromt" HorizontalAlignment="Center" Foreground="White" FontSize="18" Content="Enter License"/>
+                                        <StackPanel x:Name="licenseStackPanel" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,0">
+                                            <TextBox x:Name="licenseTb0" Style="{StaticResource IZLicensing}" MaxLength="6" TextChanged="LicenseTextChanged" CharacterCasing="Upper" />
+                                            <TextBox x:Name="licenseTb1" Style="{StaticResource IZLicensing}" MaxLength="6"  TextChanged="LicenseTextChanged"  GotFocus="LicenseFocused" CharacterCasing="Upper"/>
+                                            <TextBox x:Name="licenseTb2" Style="{StaticResource IZLicensing}" MaxLength="6"  TextChanged="LicenseTextChanged"  GotFocus="LicenseFocused" CharacterCasing="Upper"/>
+                                            <TextBox x:Name="licenseTb3" Style="{StaticResource IZLicensing}" MaxLength="6" TextChanged="LicenseTextChanged"  GotFocus="LicenseFocused" CharacterCasing="Upper"/>
+                                            <TextBox x:Name="licenseTb4" Style="{StaticResource IZLicensing}" MaxLength="6" TextChanged="LicenseTextChanged"  GotFocus="LicenseFocused" CharacterCasing="Upper"/>
+                                            <TextBox x:Name="licenseTb5" Style="{StaticResource IZLicensing}" MaxLength="6"  TextChanged="LicenseTextChanged"  GotFocus="LicenseFocused" CharacterCasing="Upper"/>
+                                        </StackPanel>
+                                        <Label HorizontalAlignment="Center" Foreground="White" FontSize="18" Margin="0,0,0,0" Content="e-mail"/>
+                                        <TextBox x:Name="LicenseEmail" MinWidth="350"  MaxWidth="300" Style="{StaticResource IZLicensing}" Height="28" Margin="0,0,0,0" />
+                                        <Label Foreground="#ef7f1a" Background="Transparent" BorderThickness="0" x:Name="licensePrompt" HorizontalAlignment="Center" FontSize="18" Margin="0,0,0,5"/>
+                                        <StackPanel x:Name="licenseButtonsStackPanel" VerticalAlignment="Bottom" Orientation="Horizontal" HorizontalAlignment="Center">
+                                            <Button Width="100" FontSize="18" Style="{StaticResource TextButtonStyle}" Content="OK" Click="EnterLicense" x:Name="LicenseOk"/>
+                                            <Button Width="100" FontSize="18" Style="{StaticResource TextButtonStyle}" Content="Clear" Click="ClearLicense" x:Name="LicenseClear"/>
+                                            <Button Width="110" FontSize="18" Style="{StaticResource TextButtonStyle}" Content="Cancel" x:Name="CancelLicenseUpdate" Visibility="Collapsed" Click="CancelLicenseUpdate_Click"/>
+                                            <Button Width="200" FontSize="18" Style="{StaticResource TextButtonStyle}" Content="Update License" x:Name="LicenseUpdate" Click="LicenseUpdate_Click" Visibility="Collapsed"/>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </Border>
+                            </Grid>
+                            
+                        </DockPanel>
+                        <Label Content="Copyright © 2015 IdentaZone, Inc" Panel.ZIndex="-1" HorizontalAlignment="Right" VerticalAlignment="Bottom" Foreground="White" FontSize="10" Margin="0,0,3,25" Grid.Row="2"/>
+                    </Grid>
+                </TabItem>
+                <TabItem  x:Name="historyTab" Style="{StaticResource InvisibleTabItem}" IsTabStop="False">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="110"/>
+                            <RowDefinition Height="40"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="100"/>
+                        </Grid.RowDefinitions>
+                        <DockPanel>
+                            <Label DockPanel.Dock="Left" FontSize="22" Foreground="White" Content="History" VerticalAlignment="Center"/>
+                        </DockPanel>
+                        <StackPanel Grid.Row="1" Orientation="Horizontal" VerticalAlignment="Bottom" HorizontalAlignment="Left">
+                            <Label Margin="5,0,65,0" FontSize="18" Foreground="White" Content="Timestamp"/>
+                            <Label FontSize="18" Foreground="White" Content="Event"/>
+                        </StackPanel>
+                        <ListBox Grid.Row="2" Background="Transparent" DataContext="{Binding RelativeSource={RelativeSource Self}}" x:Name="LogView"
+                                 BorderThickness="2" BorderBrush="#688caf" SelectionChanged="LogView_SelectionChanged">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <WrapPanel>
+                                        <Label  Width="155" FontSize="14" Foreground="#b0cb1f">
+                                            <TextBlock Text="{Binding Date}"/>
+                                        </Label>
+                                        <Label FontSize="14" Foreground="#b0cb1f">
+                                            <TextBlock Text="{Binding Message}"/>
+                                        </Label>
+                                    </WrapPanel>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                        <Label Content="Copyright © 2015 IdentaZone, Inc" Panel.ZIndex="-1" HorizontalAlignment="Right" VerticalAlignment="Bottom" Foreground="White" FontSize="10" Margin="0,0,3,25" Grid.Row="3"/>
+                        <!--
+                        <DataGrid Grid.Row="2" Style="{StaticResource IZDataGrid}" Margin="50,-3,50,0" FontSize="14" Foreground="#b0cb1f" 
+                                  x:Name="logGrid" HorizontalAlignment="Stretch" VerticalAlignment="Top" HorizontalContentAlignment="Stretch" ColumnWidth="*"
+                                  Height="200" BorderThickness="2" Width="Auto">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Binding="{Binding Date}" Width="200"/>
+
+                                <DataGridTemplateColumn Header="Book Title" Width="1*">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock VerticalAlignment="Center" 
+                                                       TextWrapping="Wrap"
+                                                       Text="{Binding Message}"/>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn >
+                            </DataGrid.Columns>
+                        </DataGrid>-->
+                    </Grid>
+                </TabItem>
+                <TabItem  x:Name="userEnrollTab" Style="{StaticResource InvisibleTabItem}" IsTabStop="False">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="110"/>
+                            <RowDefinition Height="40"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="100"/>
+                        </Grid.RowDefinitions>
+                        <RichTextBox  Grid.Row="0" Style="{StaticResource IZRichTextBox}" Background="Transparent" Width="600" HorizontalAlignment="Left" BorderThickness="0">
+                            <FlowDocument>
+                                <Paragraph Foreground="White" FontSize="18">
+                                    <Run Text="Windows Accounts are listed below. Click on record to activate/deactivate user with"/>
+                                    <Run FontWeight="Bold" Text=" IdentaMaster™ "/>
+                                    <Run Text="Biometric capabilities. Currently active users marked in"/>
+                                    <Run Foreground="#FFB0CB1F" Text="green"/>
+                                    <Run Text="color (computer administrator is active by default)"/>
+                                </Paragraph>
+                            </FlowDocument>
+                        </RichTextBox>
+                        <StackPanel Grid.Row="1" Orientation="Horizontal" VerticalAlignment="Bottom" HorizontalAlignment="Left">
+                            <Label FontSize="18" Foreground="White" Margin="50,0,335,0" Content="Logon"/>
+                            <Label FontSize="18" Foreground="White" Content="Username" />
+                        </StackPanel>
+                        <DataGrid Grid.Row="2" 
+                                  FontSize="20" 
+                                  Foreground="#EF7F1A" 
+                                  Style="{StaticResource IZDataGrid}" 
+                                  x:Name="userGrid" 
+                                  Margin="50,-3,50,0" 
+                                  VerticalAlignment="Top" 
+                                  BorderThickness="2" 
+                                  MouseUp="userGridClick" LoadingRow="userGrid_LoadingRow" 
+                                  VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" 
+                                  SelectionMode="Single" PreviewKeyDown="userGrid_PreviewKeyDown">
+                            <DataGrid.CellStyle>
+                                <Style TargetType="{x:Type DataGridCell}">
+                                    <Style.Triggers>
+                                        <Trigger Property="IsSelected" Value="True">
+                                            <Setter Property="Foreground" Value="{Binding Path=Color}" />
+                                            <Setter Property="BorderBrush" Value="White" />
+                                            <Setter Property="BorderThickness" Value="1" />
+                                            <!--<Setter Property="Background" Value="{x:Null}"/>-->
+                                        </Trigger>
+                                        <Trigger Property="IsFocused" Value="True">
+                                            <Setter Property="Foreground" Value="{Binding Path=Color}" />
+                                            <Setter Property="BorderBrush" Value="White" />
+                                            <Setter Property="BorderThickness" Value="1" />
+                                            <!--<Setter Property="Background" Value="{x:Null}"/>-->
+                                        </Trigger>
+                                    </Style.Triggers>
+                                    <Setter Property="Background" Value="{x:Null}"/>
+                                    <Setter Property="FocusVisualStyle" Value="{x:Null}"></Setter>
+                                </Style>
+                            </DataGrid.CellStyle>
+                            <DataGrid.Resources>
+                                <DataTemplate x:Key="RowTemplate">
+                                    <UniformGrid Rows="1">
+                                        <TextBlock Text="{Binding UsernameView}"/>
+                                        <TextBlock Text="{Binding FullnameView}"/>
+                                    </UniformGrid>
+                                </DataTemplate>
+                            </DataGrid.Resources>
+
+                            <DataGrid.Columns>
+                                <DataGridTemplateColumn CellTemplate="{StaticResource RowTemplate}" Width="*"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                        <Button Grid.Row="3" Style="{StaticResource NextButtonStyle}" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="10,0,0,35" Height="60" x:Name="UserRefreshButton" Click="UserRefreshButton_Click">
+                            <StackPanel Orientation="Horizontal">
+                                <Image Height="50" Source="pack://application:,,,/images/buttons/Refresh-button2.png" Stretch="Fill"/>
+                            </StackPanel>
+                        </Button>
+                        <Label Content="Copyright © 2015 IdentaZone, Inc" Panel.ZIndex="-1" HorizontalAlignment="Right" VerticalAlignment="Bottom" Foreground="White" FontSize="10" Margin="0,0,3,25" Grid.Row="3"/>
+                    </Grid>
+                </TabItem>
+
+            </TabControl>
+        </StackPanel>
+    </Grid>
+</Window>

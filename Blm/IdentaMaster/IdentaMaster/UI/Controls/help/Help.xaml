@@ -1,0 +1,19 @@
+﻿<Window x:Class="IdentaZone.IdentaMaster.Help"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        WindowStartupLocation="CenterOwner"
+        Title="Help" Height="814" Width="740">
+
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/UI/Templates/UserEditStyles.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+
+    <Grid VerticalAlignment="Stretch">
+        <Label Name="isLoading" VerticalAlignment="Center" HorizontalAlignment="Center" Style="{StaticResource UEButtonLabel}" Content="Loading..."></Label>
+        <WebBrowser x:Name="myWebBrowser" Height="Auto" Width="Auto"/>
+    </Grid>
+</Window>

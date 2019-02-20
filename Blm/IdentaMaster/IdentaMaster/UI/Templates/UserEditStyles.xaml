@@ -1,0 +1,41 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"   >
+    <Style x:Key="UEExternalGrid" TargetType="{x:Type Grid}">
+        <Setter Property="Background" Value="White"/>
+        <Setter Property="VerticalAlignment" Value="Stretch" />
+    </Style>
+    <Style x:Key="UEInternalGrid" TargetType="{x:Type Grid}">
+        <Setter Property="Background" Value="#38567C"/>
+        <Setter Property="Margin" Value="10,10,10,10"/>
+
+    </Style>
+    <Style TargetType="Label">
+        <Setter Property="Foreground" Value="White"/>
+    </Style>
+
+    <Style x:Key="UEButtonLabel" TargetType="{x:Type Label}">
+        <Setter Property="Foreground" Value="#38567C"/>
+        <Setter Property="FontSize" Value="18"/>
+    </Style>
+
+    <Style TargetType="TextBox">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Foreground" Value="White"/>
+    </Style>
+
+    <Style TargetType="{x:Type Button}">
+        <Setter Property="Width" Value="125"/>
+        <Setter Property="Height" Value="50"/>
+        <Setter Property="BorderThickness" Value="0"/>
+    </Style>
+    <!--Table setup-->
+    <Style x:Key="IZDataGrid" TargetType="{x:Type DataGrid}">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="RowBackground" Value="Transparent"/>
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="AutoGenerateColumns" Value="False"/>
+        <Setter Property="IsReadOnly" Value="True"/>
+        <Setter Property="GridLinesVisibility" Value="None"/>
+        <Setter Property="HeadersVisibility" Value="None"/>
+    </Style>
+</ResourceDictionary>

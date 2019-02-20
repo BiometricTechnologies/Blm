@@ -1,0 +1,57 @@
+﻿<UserControl x:Class="IdentaZone.IdentaMaster.UserEdit.Options"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             Height="245" Width="300">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/UI/templates/UserEditStyles.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid Style="{StaticResource UEExternalGrid}" Loaded="Options_Loaded" KeyUp="Grid_KeyUp">
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="65"/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0" Style="{StaticResource UEInternalGrid}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="60"/>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <StackPanel Grid.Row="0" Orientation="Vertical" Margin="10,10,10,0">
+                <Label>SELECT LOGIN TYPE</Label>
+                <ComboBox SelectedIndex="2" x:Name="loginType">
+                    <ComboBox.ToolTip>
+                        <TextBlock>
+                          To avoid problem at the beginning, <LineBreak /> 
+                          we strongly recommend selecting mode Biometric Or Password. <LineBreak /> 
+                          It will allow time to learn how to properly use biometrics to be successfully identified <LineBreak /> 
+                          at the same time you have an alternate regular way to logon with your password. <LineBreak /> 
+                          After while, if you accustomed yourself easily logon using biometric scanner, <LineBreak /> 
+                          you may establish advance security mode 'Biometric Only'.
+                        </TextBlock>
+                    </ComboBox.ToolTip>
+                    <ComboBoxItem>PASSWORD ONLY</ComboBoxItem>
+                    <ComboBoxItem>BIOMETRIC ONLY</ComboBoxItem>
+                    <ComboBoxItem>PASSWORD OR BIOMETRIC</ComboBoxItem>
+                </ComboBox>
+            </StackPanel>
+            <StackPanel Grid.Row="1" Orientation="Vertical"  Margin="10,0,10,0">
+                <Label>ENTER USER PASSWORD</Label>
+                <PasswordBox Name="pwdFirst" TabIndex="1"></PasswordBox>
+            </StackPanel>
+            <Label FontSize="12" x:Name="Message" Grid.Row="3" VerticalAlignment="Center" HorizontalAlignment="Center" Content="Please, select login type and enter user password"></Label>
+        </Grid>
+        <Button Grid.Row="1" Click="ProceedClick" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" VerticalAlignment="Center">
+            <StackPanel Orientation="Horizontal">
+                <Image Height="50" Source="pack://application:,,,/images/buttons/green.png" Margin="0,0,10,0"/>
+                <Label Style="{StaticResource UEButtonLabel}" VerticalAlignment="Center">PROCEED</Label>
+            </StackPanel>
+        </Button>
+    </Grid>
+</UserControl>

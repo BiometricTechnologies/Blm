@@ -1,0 +1,14 @@
+EXPORTS
+   DllMain
+   SpLsaModeInitialize
+   SpUserModeInitialize
+   SpInitialize
+   LsaApInitializePackage
+   LsaApCallPackage
+   LsaApCallPackagePassthrough
+   LsaApCallPackageUntrusted
+   LsaApLogonTerminated
+   LsaApLogonUserEx
+   DllRegisterServer PRIVATE
+   DllUnregisterServer PRIVATE
+
