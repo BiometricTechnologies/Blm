@@ -1,0 +1,248 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(SolutionDir)helpers\blm_exception.h" />
+    <ClInclude Include="$(SolutionDir)helpers\blm_logger.h" />
+    <ClInclude Include="$(SolutionDir)helpers\PlainDB.h" />
+    <ClInclude Include="C:\Program Files\Integrated Biometrics\IBISDK_x64\include\BioNetAcsDll.h" />
+    <ClInclude Include="common.h" />
+    <ClInclude Include="Dll.h" />
+    <ClInclude Include="graphics.h" />
+    <ClInclude Include="guid.h" />
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="SingleloginCred.h" />
+    <ClInclude Include="SingleloginProvider.h" />
+    <ClInclude Include="version.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="$(SolutionDir)helpers\blm_exception.cpp" />
+    <ClCompile Include="$(SolutionDir)helpers\blm_logger.cpp" />
+    <ClCompile Include="$(SolutionDir)helpers\CSVLogger.cpp" />
+    <ClCompile Include="$(SolutionDir)helpers\encryptor.cpp" />
+    <ClCompile Include="$(SolutionDir)helpers\helpers.cpp" />
+    <ClCompile Include="$(SolutionDir)helpers\isaac\rand.c" />
+    <ClCompile Include="$(SolutionDir)helpers\oaes_lib.c" />
+    <ClCompile Include="$(SolutionDir)helpers\PlainDB.cpp" />
+    <ClCompile Include="$(SolutionDir)helpers\SessionChecker.cpp" />
+    <ClCompile Include="Dll.cpp" />
+    <ClCompile Include="graphics.cpp" />
+    <ClCompile Include="guid.cpp" />
+    <ClCompile Include="SingleloginCred.cpp" />
+    <ClCompile Include="SingleloginProvider.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Graphics.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\plugin_framework\plugin_framework.vcxproj">
+      <Project>{27ca23dc-e158-4a3b-86b6-1bb2152bd4b3}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\..\..\login-clone\GraphicsResources\empty.bmp" />
+    <Image Include="..\..\..\login-clone\GraphicsResources\Log-on-icons_96_status1.jpg" />
+    <Image Include="..\..\..\login-clone\GraphicsResources\Log-on-icons_96_status2.jpg" />
+    <Image Include="..\..\..\login-clone\GraphicsResources\Log-on-icons_96_status3.jpg" />
+    <Image Include="..\..\..\login-clone\GraphicsResources\Log-on-icons_96_status4.jpg" />
+    <Image Include="..\..\..\login-clone\GraphicsResources\Log-on-icons_96_status5.jpg" />
+    <Image Include="..\..\..\login-clone\GraphicsResources\Log-on-icons_96_status6.jpg" />
+    <Image Include="..\..\..\login-clone\GraphicsResources\Log-on-icons_96_status7.jpg" />
+    <Image Include="..\..\..\login-clone\GraphicsResources\Log-on-icons_96_status8.jpg" />
+    <Image Include="..\..\..\login-clone\GraphicsResources\scanner1.png" />
+    <Image Include="..\..\..\login-clone\GraphicsResources\scanner2.png" />
+    <Image Include="..\..\..\login-clone\GraphicsResources\scanner3.png" />
+    <Image Include="..\..\..\login-clone\GraphicsResources\scanner4.png" />
+    <Image Include="..\..\..\login-clone\GraphicsResources\tileimage.bmp" />
+    <Image Include="..\GraphicsResources\empty.bmp" />
+    <Image Include="..\GraphicsResources\Log-on-icons_96_status1.jpg" />
+    <Image Include="..\GraphicsResources\Log-on-icons_96_status2.jpg" />
+    <Image Include="..\GraphicsResources\Log-on-icons_96_status3.jpg" />
+    <Image Include="..\GraphicsResources\Log-on-icons_96_status4.jpg" />
+    <Image Include="..\GraphicsResources\Log-on-icons_96_status5.jpg" />
+    <Image Include="..\GraphicsResources\Log-on-icons_96_status6.jpg" />
+    <Image Include="..\GraphicsResources\Log-on-icons_96_status7.jpg" />
+    <Image Include="..\GraphicsResources\Log-on-icons_96_status8.jpg" />
+    <Image Include="..\GraphicsResources\scanner1.png" />
+    <Image Include="..\GraphicsResources\scanner2.png" />
+    <Image Include="..\GraphicsResources\scanner3.png" />
+    <Image Include="..\GraphicsResources\scanner4.png" />
+    <Image Include="..\GraphicsResources\tileimage.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\graphicsresources\jpg9.bin" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{4972E2C4-6A45-4E5B-8BC1-2393B5ED8C6E}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>SingleLogin</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v110</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v110</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>$(SolutionDir)$(Configuration)_$(PlatformTarget)\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(SolutionDir)$(Configuration)_$(PlatformTarget)\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(SolutionDir)$(Configuration)_$(Platform)\</OutDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level4</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;SINGLELOGIN_EXPORTS;_CRT_SECURE_NO_WARNINGS;APR_DECLARE_STATIC;APU_DECLARE_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>$(ProjectDir)/../;$(ProjectDir)/../helpers/;$(ProjectDir);$(ProjectDir)/../helpers/isaac/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>secur32.lib;shlwapi.lib;gdi32.lib;ole32.lib;user32.lib;advapi32.lib;credui.lib;BioNetAcsDll.lib;libaprutil-1.lib;libapriconv-1.lib;libapr-1.lib;wsock32.lib;netapi32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalOptions>/SAFESEH:NO %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level4</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;SINGLELOGIN_EXPORTS;_CRT_SECURE_NO_WARNINGS;APR_DECLARE_STATIC;APU_DECLARE_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>$(ProjectDir)/../;$(ProjectDir)/../helpers/;$(ProjectDir);$(ProjectDir)/../helpers/isaac/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>secur32.lib;shlwapi.lib;gdi32.lib;ole32.lib;user32.lib;advapi32.lib;credui.lib;BioNetAcsDll.lib;libaprutil-1.lib;libapriconv-1.lib;libapr-1.lib;wsock32.lib;netapi32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalOptions>/SAFESEH:NO %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <Optimization>Disabled</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;SINGLELOGIN_EXPORTS;_CRT_SECURE_NO_WARNINGS;APR_DECLARE_STATIC;APU_DECLARE_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>$(SolutionDir)helpers\;$(SolutionDir);$(SolutionDir)helpers\isaac\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <ModuleDefinitionFile>digitalpersonaprovider.def</ModuleDefinitionFile>
+      <AddModuleNamesToAssembly>secur32.lib</AddModuleNamesToAssembly>
+      <AdditionalDependencies>$(SolutionDir)lib/win32/plugin_framework.lib;secur32.lib;shlwapi.lib;gdi32.lib;ole32.lib;user32.lib;gdiplus.lib;advapi32.lib;credui.lib;BioNetAcsDll.lib;libaprutil-1.lib;libapriconv-1.lib;libapr-1.lib;wsock32.lib;netapi32.lib;libglog.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalOptions>/SAFESEH:NO %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalLibraryDirectories>$(SolutionDir)plugin_framework\lib\win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+    <PreBuildEvent>
+      <Command>$(ProjectDir)/versioner.bat</Command>
+    </PreBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <Optimization>Disabled</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;SINGLELOGIN_EXPORTS;_CRT_SECURE_NO_WARNINGS;APR_DECLARE_STATIC;APU_DECLARE_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>$(SolutionDir)helpers\;$(SolutionDir);$(SolutionDir)helpers\isaac\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <ModuleDefinitionFile>digitalpersonaprovider.def</ModuleDefinitionFile>
+      <AddModuleNamesToAssembly>secur32.lib</AddModuleNamesToAssembly>
+      <AdditionalDependencies>$(SolutionDir)lib/x64/plugin_framework.lib;secur32.lib;shlwapi.lib;gdiplus.lib;credui.lib;libaprutil-1.lib;libapriconv-1.lib;libapr-1.lib;wsock32.lib;netapi32.lib;libglog.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalOptions>/SAFESEH:NO %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalLibraryDirectories>$(SolutionDir)plugin_framework\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+    <PreBuildEvent>
+      <Command>$(ProjectDir)/versioner.bat</Command>
+    </PreBuildEvent>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

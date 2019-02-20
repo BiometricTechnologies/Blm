@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<IdentaZoneConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <isActive>false</isActive>
+  <WinUsers>
+    <User>
+      <Name>Mixter</Name>
+      <SID>S-1-5-21-4037239776-1254930003-1855784266-1002</SID>
+      <Identification>Password OR Biometrics</Identification>
+      <Password />
+      <FullName>Mixter</FullName>
+    </User>
+    <User>
+      <Name>Bioguard</Name>
+      <SID>S-1-5-21-4037239776-1254930003-1855784266-1001</SID>
+      <Identification>Biometrics</Identification>
+      <Password />
+      <FullName>Mister B</FullName>
+    </User>
+    <User>
+      <Name>Guest</Name>
+      <SID>S-1-5-21-4037239776-1254930003-1855784266-501</SID>
+      <Identification>Password</Identification>
+      <Password />
+      <FullName />
+    </User>
+  </WinUsers>
+</IdentaZoneConfig>

@@ -1,0 +1,70 @@
+﻿<?xml version="1.0"?>
+<IdentaZoneConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <isActive>false</isActive>
+  <WinUsers>
+    <User>
+      <Name>Guest</Name>
+      <SID>S-1-5-21-4037239776-1254930003-1855784266-501</SID>
+      <Identification>Password</Identification>
+      <FullName />
+	  <Password>1</Password>
+      <credential xsi:type="DPCredential">
+        <Type>1769473</Type>
+        <Fingers>
+          <finger>
+            <fingerNum>0</fingerNum>
+			<bytes>3q2+rwA=</bytes>
+          </finger>
+          <finger>
+            <fingerNum>1</fingerNum>
+			<bytes>3q2+rwE=</bytes>
+          </finger>
+          <finger>
+            <fingerNum>2</fingerNum>
+			<bytes>3q2+rwI=</bytes>
+          </finger>
+          <finger>
+            <fingerNum>3</fingerNum>
+			<bytes>3q2+rwM=</bytes>
+          </finger>
+          <finger>
+            <fingerNum>4</fingerNum>
+			<bytes>3q2+rwQ=</bytes>
+          </finger>
+        </Fingers>
+      </credential>
+    </User>
+	 <User>
+      <Name>Guest1</Name>
+      <SID>S-1-5-21-4037239776-1254930003-1855784266-501</SID>
+      <Identification>Password</Identification>
+      <FullName />
+	  <Password>2</Password>
+      <credential xsi:type="DPCredential">
+        <Type>1769473</Type>
+        <Fingers>
+          <finger>
+            <fingerNum>0</fingerNum>
+			<bytes>3q2+rwA=</bytes>
+          </finger>
+          <finger>
+            <fingerNum>1</fingerNum>
+			<bytes>3q2+rwE=</bytes>
+          </finger>
+          <finger>
+            <fingerNum>2</fingerNum>
+			<bytes>3q2+rwI=</bytes>
+          </finger>
+          <finger>
+            <fingerNum>3</fingerNum>
+			<bytes>3q2+rwM=</bytes>
+          </finger>
+          <finger>
+            <fingerNum>4</fingerNum>
+			<bytes>3q2+rwQ=</bytes>
+          </finger>
+        </Fingers>
+      </credential>
+    </User>
+  </WinUsers>
+</IdentaZoneConfig>
