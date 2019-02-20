@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Include>
+  <?define ProductName="BioSecure"?>
+  <!-- TODO: Put your code here. -->
+  <?define ProductVersion=$(fun.AutoVersion(3.3))?>
+  <?define ProductCode="*"?>
+  <?define UpgradeCode="3FD35D1E-45CC-4961-A94C-DF1964A0542F"?>
+  <?define Manufacturer="IdentaZone Inc"?>
+
+  <?define IZColDiaDir="$(var.SolutionDir)BioCollector\CollectorDialog\bin\$(var.Platform)\$(var.Configuration)\"?>
+  <?define BiosecAppDir="$(var.SolutionDir)\biosec_app\BioSecure\"?>
+  
+  <?if $(var.Platform)="x86"?>
+    <?define SystemPlatform="SystemFolder"?>
+    <?define ProgramFilesPlatform="ProgramFilesFolder"?>
+  <?else?>
+    <?define SystemPlatform="System64Folder"?>
+    <?define ProgramFilesPlatform="ProgramFiles64Folder"?>
+  <?endif?>
+</Include>

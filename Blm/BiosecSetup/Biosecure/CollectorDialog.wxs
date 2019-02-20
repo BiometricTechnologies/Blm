@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <?include Variables.wxi?>
+	<Fragment>
+    
+      <!--<RegistryValue Root="HKCR" Key=".izbiosecure\DefaultIcon" Type="string" Value="[IZCDFOLDER]\CollectorDialog.exe"/> -->
+    <ComponentGroup Id="HelpHtml" >
+      <Component Id="HelpHtmlIndex" Guid="8D229DA1-0591-45D0-B962-EC3486C8D0FC" Directory="HELPINDEXLOCATION">
+        <File Id="manual_page.htm" Source="$(var.SolutionDir)biosec_app\BioSecure\Help\manual_page.htm"/>
+      </Component>
+
+      
+      <Component Id="biosecImages" Guid="99ACE91D-AE0A-4A0E-9D95-8375630C0793" Directory="BIOSECUREIMAGESLOCATION">
+        <File Id="progress_icon_overlay_animation_gif" Source="$(var.BiosecAppDir)Images\progress_animation.gif"/>
+      </Component>
+      
+      <Component Id="helpImages" Guid="6A3EFFD6-4E6D-47D9-B21A-C32DB4CA8E38" Directory="HELPIMAGESLOCATION">
+        <File Id="collector_decrypt_fp_png"
+              Source="$(var.SolutionDir)biosec_app\BioSecure\Help\images\collector_decrypt_fp.png"/>
+        <File Id="collector_encrypt_fp_png" 
+              Source="$(var.SolutionDir)biosec_app\BioSecure\Help\images\collector_encrypt_fp.png"/>
+        <File Id="decrypt_png" 
+              Source="$(var.SolutionDir)biosec_app\BioSecure\Help\images\decrypt.png"/>
+        <File Id="decryption_complete.png" 
+              Source="$(var.SolutionDir)biosec_app\BioSecure\Help\images\decryption_complete.png"/>
+        <File Id="decryption_monitor_png" 
+              Source="$(var.SolutionDir)biosec_app\BioSecure\Help\images\decryption_monitor.png"/>
+        <File Id="encrypt_png" 
+              Source="$(var.SolutionDir)biosec_app\BioSecure\Help\images\encrypt.png"/>
+        <File Id="encryption_monitor_png" 
+              Source="$(var.SolutionDir)biosec_app\BioSecure\Help\images\encryption_monitor.png"/>
+        <File Id="izbiosecure_file_png" 
+              Source="$(var.SolutionDir)biosec_app\BioSecure\Help\images\izbiosecure_file.png"/>
+        <File Id="licensing_png" 
+              Source="$(var.SolutionDir)biosec_app\BioSecure\Help\images\licensing.png"/>
+        <File Id="viewer_png" 
+              Source="$(var.SolutionDir)biosec_app\BioSecure\Help\images\viewer.png"/>
+      </Component>
+    </ComponentGroup>
+	</Fragment>
+</Wix>

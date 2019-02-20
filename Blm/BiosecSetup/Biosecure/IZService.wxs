@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <Fragment>
+    <ComponentGroup Id="IZService" Directory="SERVICEFOLDER">
+      <Component Id="IZServiceService" Guid="*">
+        <File Id="IZService_exe" Source="$(var.SolutionDir)BioCollector\IZService\bin\$(var.Platform)\ReleaseSetup\IZService.exe"/>
+        <ServiceInstall Id="ServiceInstaller"
+                                         Type="ownProcess"
+                                         Vital="yes"
+                                         Name="IdentaZone:Biocollector"
+                                         DisplayName="IdentaZone:BiocollectorService"
+                                         Description="IdentaZone biometrics service"
+                                         Start="auto"
+                                         Account="LocalSystem"
+                                         ErrorControl="ignore"
+                                         Interactive="no" />
+      </Component>
+    </ComponentGroup>
+  </Fragment>
+</Wix>

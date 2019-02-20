@@ -1,0 +1,70 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <?include Variables.wxi?>
+  <Fragment>
+    <ComponentGroup Id="Biosec" Directory="BIOSECUREFOLDER">
+      <Component Id="Biosecure" Guid="D9F6CA03-B29A-4CD0-837C-969554B2E3DF">
+        <File Id="explorerdataproviderdll" 
+              Source="$(var.SolutionDir)lib\$(var.ExplorerDataProvider.Platform)\explorerdataprovider.dll"/>
+        <File Id="bioseclibdll"
+             Source="$(var.SolutionDir)lib\$(var.biosec_lib.Platform)\biosec_lib.dll"/>
+        <File Id="biosecexecutable"
+             Source="$(var.SolutionDir)biosec_app\Biosecure\bin\$(var.BioSecure _Collector\BioSecure_.Platform)\$(var.BioSecure _Collector\BioSecure_.Configuration)\BioSecure.exe"/>
+       
+       <File Id="commandlinedll"
+             Source="$(var.SolutionDir)biosec_app\Biosecure\bin\$(var.BioSecure _Collector\BioSecure_.Platform)\$(var.BioSecure _Collector\BioSecure_.Configuration)\commandline.dll"/>
+
+       <File Id="GAC_file_BioControlls_dll" Source="$(var.SolutionDir)BioControls\bin\$(var.Configuration)\BioControls.dll"/>
+
+
+        <File Id="IdentaZoneAPdll" 
+             Source="$(var.SolutionDir)lib\$(var.IdentaZoneAP.Platform)\IdentaZoneAP.dll"/>
+       <File Id="LibApr" DiskId="1" 
+             Source="$(var.ProjectDir)..\libs\$(var.Platform)\libapr-1.dll"/>
+       <File Id="LibAprIconv" DiskId="1" 
+             Source="$(var.ProjectDir)..\libs\$(var.Platform)\libapriconv-1.dll"/>
+       <File Id="LibGlog" DiskId="1" 
+             Source="$(var.ProjectDir)..\libs\$(var.Platform)\libglog.dll"/>
+       <File Id="IZCD_SecuGen.FDxSDKPro.Windows_dll"
+             Source="$(var.ProjectDir)..\libs\$(var.Platform)\SecuGen.FDxSDKPro.Windows.dll"/>
+       <RegistryValue Root="HKCR" Key=".izbiosecure\DefaultIcon"
+             Type="string" Value="[BIOSECUREFOLDER]BioSecure.exe"/>
+      </Component>
+      <Component Id="InstallPath" Guid="230056A7-C558-4781-9889-9EE1B78354BD">
+        <RegistryValue Root="HKLM"
+            Key="Software\IdentaZone"
+            Name="PluginsPath"
+            Type="string"
+            Value="[IZPATH]"/>
+      </Component>
+    </ComponentGroup>
+    <!-- CPP plugins -->
+
+    <ComponentGroup Id="BiosecMSVSdebug" Directory="$(var.SystemPlatform)">
+      <Component Id="BiosecureMSVSdebug" Guid="92468161-B1BF-4DB1-94D0-F6EA32801C3A">
+        <File Id="msvcp110d_dll" 
+              Source="$(var.ProjectDir)..\libs\$(var.Platform)\msvs\msvcp110d.dll"/>
+        <File Id="msvcr110d_dll" 
+              Source="$(var.ProjectDir)..\libs\$(var.Platform)\msvs\msvcr110d.dll"/>
+        <File Id="vccorlib110d_dll" 
+              Source="$(var.ProjectDir)..\libs\$(var.Platform)\msvs\vccorlib110d.dll"/>
+      </Component>
+    </ComponentGroup>
+
+    <CustomAction Id="BiosecRegister"
+                 Directory="BIOSECUREFOLDER"
+                 ExeCommand='regsvr32.exe /s "[BIOSECFOLDER]explorerdataprovider.dll"'
+                  Execute="deferred"
+                  Impersonate="no"
+                    >
+    </CustomAction>
+    <CustomAction Id="BiosecUnregister"
+                  Directory="BIOSECUREFOLDER"
+                  ExeCommand='regsvr32.exe /s /u "[BIOSECFOLDER]explorerdataprovider.dll"'>
+    </CustomAction>
+    <InstallExecuteSequence>
+      <Custom Action="BiosecRegister" Before="InstallFinalize">NOT Installed</Custom>
+      <Custom Action='BiosecUnregister' After='InstallInitialize'>(NOT UPGRADINGPRODUCTCODE) AND (REMOVE="ALL")</Custom>
+    </InstallExecuteSequence>
+  </Fragment>
+</Wix>

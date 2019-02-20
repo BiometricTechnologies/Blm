@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <Fragment>
+    
+    <ComponentGroup Id="GAC_GROUP" Directory="IdentaZoneFolder">
+      <Component Id="GAC_log4net_dll" Guid="*">
+        <File Id="GAC_file_log4net_dll" Source="$(var.SolutionDir)biosec_app\Biosecure\bin\$(var.BioSecure _Collector\BioSecure_.Platform)\Debug\log4net.dll" Assembly=".net" KeyPath="yes" />
+      </Component>
+      <Component Id="GAC_CollectorServices_dll" Guid="*">
+        <File Id="GAC_file_CollectorServices_dll" Source="$(var.SolutionDir)BioCollector\CollectorServices\bin\$(var.Platform)\ReleaseSetup\CollectorServices.dll" Assembly=".net" KeyPath="yes" />
+      </Component>
+      <Component Id="GAC_IMPlugin_dll" Guid="*">
+        <File Id="GAC_file_IMPlugin_dll" Source="$(var.SolutionDir)IMPlugin\IMPlugin\bin\$(var.Platform)\ReleaseSetup\IMPlugin.dll" Assembly=".net" KeyPath="yes"/>
+      </Component>
+      <Component Id="GAC_PluginManager_dll" Guid="*">
+        <File Id="GAC_file_PluginManager_dll" Source="$(var.SolutionDir)IMPlugin\PluginManager\bin\$(var.Platform)\ReleaseSetup\PluginManager.dll" Assembly=".net" KeyPath="yes"/>
+      </Component>
+      <Component Id="GAC_Licensing.Net_dll" Guid="*">
+        <File Id="GAC_file_Licensing.Net_dll" Source="$(var.SolutionDir)biosec_app\lib\SoftActivate\Licensing.net.dll" Assembly=".net" KeyPath="yes"/>
+       </Component>
+    </ComponentGroup>
+    
+  </Fragment>
+</Wix>

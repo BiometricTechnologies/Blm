@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <?include Variables.wxi?>
+  
+	<Fragment>
+    <ComponentGroup Id="BiosecReg" Directory="WindowsFolder">
+      <Component Id="BiosecRegistration" Guid="2B5D9D79-4E7F-431D-B333-C27765CD7CB3">
+        <RegistryKey Key="Software" Root="HKLM">
+          <RegistryKey Key="Classes">
+            <RegistryKey Key=".izbiosecure">         
+              <RegistryValue Type="string" Value="biosecure.izbiosecure" />
+            </RegistryKey>
+          </RegistryKey>
+        </RegistryKey>
+
+        <RegistryKey Key="Software" Root="HKLM">
+          <RegistryKey Key="Classes">
+           <RegistryKey Key="biosecure.izbiosecure">
+             <RegistryValue Name="ApplicationPath" Value="[BIOSECUREFOLDER]BioSecure.exe" Type="string" />
+              <RegistryKey Key="shell">
+                <RegistryKey Key="open">
+                  <RegistryKey Key="command">
+                    <RegistryValue Value="[BIOSECUREFOLDER]BioSecure.exe -u -i &quot;%1&quot;" Type="string" />
+                  </RegistryKey>
+                </RegistryKey>
+              </RegistryKey>
+            </RegistryKey>
+
+          </RegistryKey>
+        </RegistryKey>
+      </Component>
+    </ComponentGroup> 
+	</Fragment>
+</Wix>

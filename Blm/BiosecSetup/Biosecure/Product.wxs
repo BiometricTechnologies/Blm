@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <?include Variables.wxi?>
+
+  <Product Id="*" Name="$(var.ProductName)" Language="1033" Version="$(var.ProductVersion)" Manufacturer="$(var.Manufacturer)" UpgradeCode="$(var.UpgradeCode)">
+    <Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
+
+    <Upgrade Id="$(var.UpgradeCode)">
+      <UpgradeVersion OnlyDetect="yes" Minimum="$(var.ProductVersion)" Property="NEWERVERSIONDETECTED" IncludeMinimum="no" />
+      <UpgradeVersion OnlyDetect="no" Maximum="$(var.ProductVersion)" Property="OLDERVERSIONBEINGUPGRADED" IncludeMaximum="no" />
+    </Upgrade>
+    <InstallExecuteSequence>
+      <RemoveExistingProducts Before="InstallInitialize" />
+    </InstallExecuteSequence>
+
+    <Property Id="OLDVERSION" Secure="yes" />
+    <Upgrade Id="$(var.UpgradeCode)">
+      <UpgradeVersion
+             Minimum="1.0.0.0" Maximum="99.0.0.0"
+             Property="OLDVERSION"
+             IncludeMinimum="yes" IncludeMaximum="no" />
+    </Upgrade>
+    
+    
+    <MediaTemplate EmbedCab="yes" CompressionLevel="high"/>
+
+    <Feature Id="ProductFeature" Title="$(var.ProductName)" Level="1">
+      <ComponentGroupRef Id="GAC_GROUP"/>
+      <ComponentGroupRef Id="IZService"/>
+      <ComponentGroupRef Id="HelpHtml"/>
+      <ComponentGroupRef Id="Biosec"/>
+      <ComponentGroupRef Id="BiosecMSVSdebug"/>
+      <ComponentGroupRef Id="BiosecReg"/>
+    </Feature>
+
+  
+    <InstallExecuteSequence>
+      <ScheduleReboot After="InstallFinalize"/>
+    </InstallExecuteSequence>
+   
+    
+  </Product>
+
+  <Fragment>
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <Directory Id="WindowsFolder">
+      </Directory>
+      <Directory Id="$(var.SystemPlatform)">
+      </Directory>
+      <Directory Id="$(var.ProgramFilesPlatform)">
+        <Directory Id="IdentaZoneFolder" Name="IdentaZone">
+          <Directory Id="BIOSECUREFOLDER" Name="BioSecure" >
+            <Directory Id="BIOSECUREIMAGESLOCATION" Name="Images"/> 
+            <Directory Id="SERVICEFOLDER" Name="Service">
+            </Directory>
+            <Directory Id="HELPINDEXLOCATION" Name="Help">
+                <Directory Id="HELPIMAGESLOCATION" Name="images"/>
+              </Directory>
+          </Directory>
+        </Directory>
+      </Directory>
+      <Directory Id="IZPATH" Name="[IZPATH]">
+        <Directory Id="IZCDPLUGINSFOLDER" Name="Plugins"/>
+      </Directory>
+    </Directory>
+  </Fragment>
+
+
+</Wix>
