@@ -1,0 +1,238 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <ControlTemplate TargetType="{x:Type Label}" x:Key="Rounded">
+        <Border Name="Border" BorderBrush="Green" BorderThickness="1" CornerRadius="7" Padding="3">
+            <Border.Background>
+                <SolidColorBrush Color="Green"/>
+            </Border.Background>
+            <ContentPresenter Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}"/>
+        </Border>
+    </ControlTemplate>
+
+    <ControlTemplate x:Key="TextBoxRounded" TargetType="{x:Type TextBoxBase}">
+        <Border Background="{TemplateBinding Background}" 
+                x:Name="Bd" BorderBrush="Transparent"
+                BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="5">
+            <ScrollViewer x:Name="PART_ContentHost" />
+        </Border>
+    </ControlTemplate>
+
+
+    <!--Color Brushes-->
+    <SolidColorBrush x:Key="IdentaGreen" Color="#9FB924" />
+
+
+    <!-- IdentaGreenBorder-->
+    <Style x:Key="IdentaGreenBorder" TargetType="Border">
+        <Setter Property="CornerRadius" Value="0"/>
+        <Setter Property="BorderBrush" Value="{StaticResource IdentaGreen}"/>
+        <Setter Property="BorderThickness" Value="2"/>
+    </Style>
+
+    <!-- This style is used for buttons, to remove the WPF default 'animated' mouse over effect -->
+    <Style x:Key="NextButtonStyle" TargetType="Button">
+        <Setter Property="OverridesDefaultStyle" Value="True"/>
+        <Setter Property="Width" Value="180"/>
+        <Setter Property="Height" Value="50"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Margin" Value="175,0,0,15"/>
+
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+
+                    <Border Name="border" 
+                            BorderThickness="0"
+                            Padding="4,2" 
+                            BorderBrush="#EF7F1A" 
+                            CornerRadius="3" 
+                            Background="{TemplateBinding Background}">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="border" Property="Background" Value="#4C1A98EF" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- This style is used for buttons, to remove the WPF default 'animated' mouse over effect -->
+    <Style x:Key="HelpButtonStyle" TargetType="Button">
+        <Setter Property="FontSize" Value="20"/>
+        <Setter Property="OverridesDefaultStyle" Value="True"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border Name="border" 
+                            BorderThickness="0"
+                            Padding="4,2" 
+                            BorderBrush="#EF7F1A" 
+                            CornerRadius="3" 
+                            Background="{TemplateBinding Background}">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="border" Property="Background" Value="#EF7F1A" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- This style is used for buttons, to remove the WPF default 'animated' mouse over effect -->
+    <Style x:Key="TextButtonStyle" TargetType="Button">
+        <Setter Property="OverridesDefaultStyle" Value="True"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+
+                    <Border Name="border" 
+                            BorderThickness="0"
+                            Padding="4,2" 
+                            BorderBrush="#EF7F1A" 
+                            CornerRadius="3" 
+                            Background="{TemplateBinding Background}">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="border" Property="Background" Value="#EF7F1A" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+
+    <!--Tab ToggleButton style -->
+    <Style x:Key="toggleButtonStyle" TargetType="{x:Type ToggleButton}">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderBrush" Value="Transparent"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Padding" Value="-4"/>
+        <Setter Property="Margin" Value="1, 0"/>
+        <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+    </Style>
+
+    <Style x:Key="IZRichTextBox" TargetType="RichTextBox">
+        <Setter Property="Focusable" Value="False"/>
+    </Style>
+    
+    <!-- Transparent TabItem-->
+    <Style x:Key="InvisibleTabItem" TargetType="{x:Type TabItem}">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="IsTabStop" Value="False"/>
+        <!--Remove tab headers hack-->
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type TabItem}"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--Licensing textbox style-->
+    <Style x:Key="IZLicensing" TargetType="{x:Type TextBox}">
+        <Setter Property="Margin" Value="2,0,2,0"/>
+        <Setter Property="Foreground" Value="GreenYellow"/>
+        <Setter Property="FontFamily" Value="Consolas"/>
+        <Setter Property="FontSize" Value="16"/>
+        <Setter Property="Background" Value="#A038557B"/>
+        <Setter Property="BorderThickness" Value="2"/>
+        <Setter Property="IsReadOnly" Value="False"/>
+        <Setter Property="MinWidth" Value="66"/>
+        <Setter Property="MaxWidth" Value="66"/>
+        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        <Setter Property="UndoLimit" Value="0"/>
+    </Style>
+
+    <Style x:Key="IZRadioButton" TargetType="{x:Type RadioButton}">
+        <Setter Property="Margin" Value="0,10,0,10"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="FontSize" Value="24"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type RadioButton}">
+                    <StackPanel Orientation="Horizontal">
+                        <Image x:Name="IdentaRadioButton" Source="/BioControls;Component/images/checkbox/green.png" Height="45" Width="33"/>
+                        <ContentPresenter VerticalAlignment="Center" Margin="10,0,0,0" />
+                    </StackPanel>
+                    <ControlTemplate.Triggers>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsChecked" Value="True"/>
+                                <Condition Property="IsEnabled" Value="True"/>
+                            </MultiTrigger.Conditions>
+                            <Setter TargetName="IdentaRadioButton" Property="Source" Value="/BioControls;Component/images/checkbox/yellow.png" />
+                        </MultiTrigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="IdentaRadioButton" Property="Source" Value="/BioControls;Component/images/checkbox/red.png"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Licensing tab check boxes styl e-->
+    <Style x:Key="LicenseCheckBox" TargetType="{x:Type CheckBox}">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Foreground" Value="Red"/>
+        <Setter Property="FontSize" Value="24"/>
+        <Setter Property="IsEnabled" Value="False"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type CheckBox}">
+                    <StackPanel Orientation="Horizontal">
+                        <Image x:Name="IdentaCheckbox" Source="pack://application:,,,/images/checkbox/white.png" Height="45" Width="33"/>
+                        <ContentPresenter VerticalAlignment="Center" Margin="10,0,0,0" />
+                    </StackPanel>
+                    <ControlTemplate.Triggers>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsChecked" Value="True"/>
+                                <Condition Property="IsEnabled" Value="True"/>
+                            </MultiTrigger.Conditions>
+                            <Setter TargetName="IdentaCheckbox" Property="Source" Value="pack://application:,,,/images/checkbox/yellow.png" />
+                            <Setter Property="Foreground" Value="White"/>
+                        </MultiTrigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="IdentaCheckbox" Property="Source" Value="pack://application:,,,/images/checkbox/white.png"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--Table setup-->
+    <Style x:Key="IZDataGrid" TargetType="{x:Type DataGrid}">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="RowBackground" Value="Transparent"/>
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="AutoGenerateColumns" Value="False"/>
+        <Setter Property="IsReadOnly" Value="True"/>
+        <Setter Property="GridLinesVisibility" Value="None"/>
+        <!--<Setter Property="HeadersVisibility" Value="None"/>-->
+    </Style>
+
+
+    <Style TargetType="{x:Type DataGridColumnHeader}">
+        <Setter Property="Background" Value="Transparent" />
+    </Style>
+    <Style TargetType="{x:Type DataGridRowHeader}">
+        <Setter Property="Background" Value="Transparent" />
+    </Style>
+</ResourceDictionary>

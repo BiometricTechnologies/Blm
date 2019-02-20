@@ -1,0 +1,376 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{AA254E5E-687B-4064-810A-FD2B7539F04F}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>IdentaZone.BioControls</RootNamespace>
+    <AssemblyName>BioControls</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>IdentaZone.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'ReleaseSetup|AnyCPU'">
+    <OutputPath>bin\ReleaseSetup\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'ReleaseSetup|x86'">
+    <OutputPath>bin\x86\ReleaseSetup\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'ReleaseSetup|x64'">
+    <OutputPath>bin\x64\ReleaseSetup\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Test|AnyCPU'">
+    <OutputPath>bin\Test\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Test|x86'">
+    <OutputPath>bin\x86\Test\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Test|x64'">
+    <OutputPath>bin\x64\Test\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Licensing.Net">
+      <HintPath>..\biosec_app\lib\SoftActivate\Licensing.Net.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net">
+      <HintPath>..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Auxiliary\Licenser.cs" />
+    <Compile Include="FingerDisplay.xaml.cs">
+      <DependentUpon>FingerDisplay.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="GifImage.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <None Include="packages.config" />
+    <None Include="Properties\VersionInfo.base.cs" />
+    <Compile Include="Properties\VersionInfo.cs" />
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="IdentaZone.snk" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <AppDesigner Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="FingerDisplay.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UI\Templates\DefaultStyles.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UI\Templates\ScrollViewStyle.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\cursor.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\identa master coursor 150-2 %281%29.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\background.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\blue_table.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\buttons\arrow.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\buttons\green.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\buttons\next.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\buttons\red.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\buttons\Refresh-button2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\checkbox\checked.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\checkbox\green.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\checkbox\red.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\checkbox\white.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\checkbox\yellow.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\empty_hands.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\fingers\0.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\fingers\1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\fingers\2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\fingers\3.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\fingers\4.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\fingers\5.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\fingers\6.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\fingers\7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\fingers\8.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\fingers\9.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\fingers\g0.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\fingers\g1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\fingers\g2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\fingers\g3.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\fingers\g4.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\fingers\g5.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\fingers\g6.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\fingers\g7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\fingers\g8.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\fingers\g9.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\fingers\PrintImage.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\identa_master_logo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\identa_zone_logo_small.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\IdentaZone.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\page1_image.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\tabs\AboutIdentaZone.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\tabs\AboutIdentaZonePassive.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\tabs\Enrollment.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\tabs\EnrollmentPassive.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\tabs\History.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\tabs\HistoryPassive.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\tabs\Licensing.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\tabs\LicensingPassive.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\tabs\TestScanner.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\tabs\TestScannerPassive.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\LicenserTemplate.xml" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+  <UsingTask TaskName="HgVersionFile" AssemblyFile="lib\MSBuildVersioning\MSBuildVersioning.dll" />
+  <Target Name="BeforeBuild">
+    <HgVersionFile TemplateFile="Properties\VersionInfo.base.cs" DestinationFile="Properties\VersionInfo.cs" />
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
+  </Target>
+</Project>

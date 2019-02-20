@@ -1,0 +1,64 @@
+﻿<Window x:Class="IdentaZone.Collector.Dialog.FileChooser"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:IdentaZone.Collector.Dialog"
+        Title="Biometrically encrypted archive" Height="500" Width="600" WindowStartupLocation="CenterOwner" ResizeMode="NoResize" x:Name="FileChooserUI" Closed="FileChooserUI_Closed">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/BioControls;component/UI/templates/DefaultStyles.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/BioControls;component/UI/templates/ScrollViewStyle.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+    <DockPanel>
+        <DockPanel DockPanel.Dock="Bottom" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="10">
+
+            <Button x:Name="DecryptSelected" DockPanel.Dock="Left" Height="50" Width="150" 
+                    Click="DecryptSelected_Click" Style="{StaticResource NextButtonStyle}" Margin="0"
+                    IsEnabled="False">
+                <StackPanel Orientation="Horizontal">
+                    <Image Height="50" Source="pack://application:,,,/BioControls;component/images/buttons/green.png"/>
+                    <Label VerticalAlignment="Center" Content="Decrypt Selected" HorizontalAlignment="Left"/>
+                </StackPanel>
+            </Button>
+            <Button x:Name="DecryptAll" DockPanel.Dock="Left" Height="50" Width="150" Click="DecryptAll_Click" Style="{StaticResource NextButtonStyle}" Margin="0" >
+                <StackPanel Orientation="Horizontal">
+                    <Image Height="50" Source="pack://application:,,,/BioControls;component/images/buttons/green.png"/>
+                    <Label VerticalAlignment="Center" Content="Decrypt All" HorizontalAlignment="Left"/>
+                </StackPanel>
+            </Button>
+        </DockPanel>
+        <DockPanel DockPanel.Dock="Top"  Margin="20,20,20,0" Background="#38567C">
+            <Label x:Name="Prompt" Content="Select files to decrypt" DockPanel.Dock="Top" HorizontalAlignment="Center" Foreground="#B7FF4B" FontSize="16"/>
+            <TreeView  x:Name="FileViewer" Background="#38567C"
+            DockPanel.Dock="Top" DataContext="{Binding ElementName=FileChooserUI, Path=TreeModel}" ItemsSource="{Binding Items}">
+                <TreeView.ItemContainerStyle>
+                    <Style TargetType="{x:Type TreeViewItem}">
+                        <Setter Property="IsExpanded" Value="True"/>
+                    </Style>
+                </TreeView.ItemContainerStyle>
+                <TreeView.Resources>
+                    <HierarchicalDataTemplate DataType="{x:Type local:FileViewModel}" ItemsSource="{Binding Files}">
+                        <TextBlock Text="{Binding Name}"></TextBlock>
+                    </HierarchicalDataTemplate>
+                </TreeView.Resources>
+
+                <TreeView.ItemTemplate>
+                    <HierarchicalDataTemplate ItemsSource="{Binding Path=Files}" >
+                        <DockPanel Margin="2" Height="20">
+                            <CheckBox Name="chk" Margin="1" Tag="{Binding Path=Name}" IsChecked="{Binding IsChecked}" VerticalAlignment="Center" />
+                            <Image  Margin="1" Source="{Binding Path=ImageUrl}" />
+                            <TextBlock Text="{Binding Path=Name}" Margin="1" 
+                                       VerticalAlignment="Center" Foreground="White" FontSize="13"/>
+                            <TextBlock Margin="20,1,1,0" Text="{Binding Path=ChangedDate}" VerticalAlignment="Center" 
+                                       HorizontalAlignment="Right" Foreground="#B7FF4B" FontSize="13"/>
+                            <TextBlock Margin="0,1,1,1" Text="{Binding Path=Size}" VerticalAlignment="Center" 
+                                       HorizontalAlignment="Right" Foreground="#B7FF4B" FontSize="13"/>
+                        </DockPanel>
+                    </HierarchicalDataTemplate>
+                </TreeView.ItemTemplate>
+            </TreeView>
+        </DockPanel>
+    </DockPanel>
+</Window>

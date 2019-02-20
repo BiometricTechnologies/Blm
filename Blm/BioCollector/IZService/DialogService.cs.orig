@@ -1,0 +1,138 @@
+﻿using IdentaZone.CollectorServices;
+using log4net;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.ServiceModel;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace IdentaZone.IZService
+{
+    [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single)]
+    class DialogService : IDialogGUIService
+    {
+        // Logger instance
+        protected readonly ILog log = LogManager.GetLogger(typeof(DialogService));
+
+        public IDialogGUICallback callback;
+        protected BioData BioDataValue;
+
+        public enum ClientState { DISCONNECTED, STARTED, CONNECTED, READY };
+        public ClientState CurrClientState;
+
+        public String ApplicationDirectory { get; set; }
+
+        public DialogService(String applicationDirectory)
+        {
+            ApplicationDirectory = applicationDirectory;
+        }
+
+        public BioData BioData
+        {
+            get
+            {
+                var output = BioDataValue;
+                BioDataValue = null;
+                return output;
+            }
+        }
+
+        protected int ProviderSelectionValue;
+        public int ProviderSelection
+        {
+            get
+            {
+                return ProviderSelectionValue;
+            }
+        }
+
+        protected int DeleteAfterValue;
+        public int DeleteAfter
+        {
+            get
+            {
+                return DeleteAfterValue;
+            }
+        }
+
+        public bool Login()
+        {
+            log.Info("GUIclient is trying to login");
+            if (CurrClientState == ClientState.STARTED)
+            {
+                callback = OperationContext.Current.GetCallbackChannel<IDialogGUICallback>();
+                CurrClientState = ClientState.CONNECTED;
+                log.Info("Accepted GUIclient");
+                return true;
+            }
+            else
+            {
+                log.Info("Server is full. Rejected GUIclient");
+                return false;
+            }
+        }
+
+        public void Logout()
+        {
+            log.Info("GUIclient is logging out");
+            callback = null;
+            BioDataValue = null;
+            CurrClientState = ClientState.DISCONNECTED;
+        }
+
+        public void SendBiometrics(BioData bioData, int selectedProvider)
+        {
+            log.Info("GUIclient sent biometrics data");
+            ProviderSelectionValue = selectedProvider;
+            BioDataValue = bioData;
+        }
+
+        public void DeleteAfterChanged(bool deleteAfter)
+        {
+            log.Info("GUIclient updated DeleteAfterState " + deleteAfter); 
+            if (deleteAfter)
+            {
+                DeleteAfterValue = 1;
+            }
+            else
+            {
+                DeleteAfterValue = 0;
+            }
+        }
+
+
+        public void Ready()
+        {
+            log.Info("GUIclient is Ready");
+            CurrClientState = ClientState.READY;
+        }
+
+
+        public string GetApplicationDirectory()
+        {
+            return ApplicationDirectory;
+        }
+
+        internal void Heartbeat()
+        {
+            bool stop = true;
+            try{
+                if (CurrClientState != ClientState.DISCONNECTED)
+                {
+                    if (callback.Heartbeat())
+                    {
+                        stop = false;
+                    }
+                }
+            }catch(Exception ex){
+                log.Error("Heartbeat failed" + ex);
+            }
+            if (stop && CurrClientState != ClientState.DISCONNECTED)
+            {
+                log.Info("Hearbeat failed");
+                Logout();
+            }
+        }
+    }
+}
