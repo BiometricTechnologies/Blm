@@ -1,0 +1,153 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Source Files\archive">
+      <UniqueIdentifier>{90d53d08-a848-47c1-9bc9-25703aa4e614}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Source Files\archiever">
+      <UniqueIdentifier>{1d1b4902-0d3d-4122-9bea-877772c3d1dc}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="stdafx.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="biosec_lib.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="biosecHeader.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="common.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DynamicLibrary.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="EncryptionKeyManager.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="encryptor.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="fileEncryptor.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="IProgressReporter.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="progressBar.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="biometricDatabaseMaster.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="severityLogger.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="archiever.h">
+      <Filter>Source Files\archiever</Filter>
+    </ClInclude>
+    <ClInclude Include="archieverBase.h">
+      <Filter>Source Files\archiever</Filter>
+    </ClInclude>
+    <ClInclude Include="IArchiever.h">
+      <Filter>Source Files\archiever</Filter>
+    </ClInclude>
+    <ClInclude Include="biosec_exceptions.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="archieverFactory.h">
+      <Filter>Source Files\archiever</Filter>
+    </ClInclude>
+    <ClInclude Include="tarEncryptor.h">
+      <Filter>Source Files\archiever</Filter>
+    </ClInclude>
+    <ClInclude Include="tarDecryptor.h">
+      <Filter>Source Files\archiever</Filter>
+    </ClInclude>
+    <ClInclude Include="archiveEntry.h">
+      <Filter>Source Files\archive</Filter>
+    </ClInclude>
+    <ClInclude Include="archiveReader.h">
+      <Filter>Source Files\archive</Filter>
+    </ClInclude>
+    <ClInclude Include="archiveWriter.h">
+      <Filter>Source Files\archive</Filter>
+    </ClInclude>
+    <ClInclude Include="archiveDiskWriter.h">
+      <Filter>Source Files\archive</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="biosec_lib.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="biosecHeader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="common.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DynamicLibrary.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="encryptor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fileEncryptor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="progressBar.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="biometricDatabaseMaster.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="archiever.cpp">
+      <Filter>Source Files\archiever</Filter>
+    </ClCompile>
+    <ClCompile Include="tarDecryptor.cpp">
+      <Filter>Source Files\archiever</Filter>
+    </ClCompile>
+    <ClCompile Include="tarEncryptor.cpp">
+      <Filter>Source Files\archiever</Filter>
+    </ClCompile>
+    <ClCompile Include="archiveEntry.cpp">
+      <Filter>Source Files\archive</Filter>
+    </ClCompile>
+    <ClCompile Include="archiveReader.cpp">
+      <Filter>Source Files\archive</Filter>
+    </ClCompile>
+    <ClCompile Include="archiveWriter.cpp">
+      <Filter>Source Files\archive</Filter>
+    </ClCompile>
+    <ClCompile Include="archiveDiskWriter.cpp">
+      <Filter>Source Files\archive</Filter>
+    </ClCompile>
+    <ClCompile Include="archieverBase.cpp">
+      <Filter>Source Files\Resource Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
