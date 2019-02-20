@@ -1,0 +1,29 @@
+﻿<Window x:Class="IdentaZone.BioSecure.ProgressBar"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Progress Bar" Height="Auto" Width="525" ResizeMode="CanMinimize"  Closing="Window_Closing" Closed="Window_Closed" WindowStartupLocation="CenterScreen" SizeToContent="Height" WindowStyle="None"
+        DataContext="{Binding RelativeSource={RelativeSource Self}}" Visibility="Hidden"
+        >
+
+   
+    
+    <Window.TaskbarItemInfo>
+        <TaskbarItemInfo x:Name="taskBarItemInfo" Overlay="{Binding Path=OverlayAnimation}">            
+        </TaskbarItemInfo>
+    </Window.TaskbarItemInfo>
+    
+
+    <Grid>
+        <StackPanel Orientation="Vertical" x:Name="Panel"/>
+        <Border x:Name="Message" BorderBrush="Black" BorderThickness="1"  Background="#38567C" Opacity="0" Visibility="Collapsed">
+            <Grid  Panel.ZIndex="1"  VerticalAlignment="Center">
+               <!-- <Label x:Name="MessageText" Content="Done" FontSize="20" Foreground="#B7FF4B" HorizontalAlignment="Center"/> -->
+                <TextBlock HorizontalAlignment="Center" FontSize="20" Foreground="#B7FF4B" VerticalAlignment="Center" Text="" TextTrimming="CharacterEllipsis" x:Name="MessageText"/>
+               
+            </Grid>
+           
+        </Border>
+        </Grid>
+        
+    
+</Window>

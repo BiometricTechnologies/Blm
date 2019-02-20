@@ -1,0 +1,40 @@
+﻿<Window x:Class="IdentaZone.BioSecure.ErrorWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="ErrorWindow"  Height="300" Width="700" WindowStartupLocation="CenterOwner" x:Name="FileChooserUI">
+
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/BioControls;component/UI/templates/DefaultStyles.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/BioControls;component/UI/templates/ScrollViewStyle.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+
+    <Grid Background="#38567C">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Left">
+            <Label Margin="5,0,65,0" FontSize="14" Foreground="#B7FF4B" Width="70" Content="Status"/>
+            <Label FontSize="14" Foreground="#B7FF4B" Width="200" Content="File"/>
+            <Label FontSize="14" Foreground="#B7FF4B" Content="Message"/>
+        </StackPanel>
+        <ListBox Grid.Row="1" Background="Transparent" DataContext="{Binding RelativeSource={RelativeSource Self}}" x:Name="ErrorLogView"
+                                 BorderThickness="2" BorderBrush="#688caf">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <WrapPanel>
+                        <TextBlock  Text="{Binding ErrorTypeStr}" Width="70" FontSize="14" Foreground="#B7FF4B"/>
+                        <TextBlock  Text="{Binding FileNameStr}" Width="200" FontSize="14" Foreground="#B7FF4B"/>
+                        <TextBlock  Text="{Binding ErrorMessageStr}" FontSize="14" Foreground="#B7FF4B"/>
+                    </WrapPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+
+    </Grid>
+</Window>
